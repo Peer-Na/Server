@@ -24,6 +24,7 @@ public class User {
     @Column(name = "image_url")
     private String imageUrl;
     private String introduce;
+    @Column(name = "github_repo")
     private String githubRepo;
     private Integer score;
     @Enumerated(EnumType.STRING)

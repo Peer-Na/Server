@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function linkGithubRepo() {
     const repoName = prompt("Github repository 명을 입력해주세요. (예: CS_Study)");
-    if (repoName === undefined)
+    if (repoName === '' || repoName === null)
         return;
     axios.patch('/api/users/github-repo', {
         githubRepo: repoName

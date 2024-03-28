@@ -6,6 +6,8 @@ import cos.peerna.domain.match.model.Standby;
 import cos.peerna.domain.match.service.MatchService;
 import cos.peerna.domain.room.service.RoomService;
 import cos.peerna.domain.user.model.Category;
+import cos.peerna.domain.user.model.User;
+import cos.peerna.domain.user.service.UserService;
 import cos.peerna.global.security.LoginUser;
 import cos.peerna.global.security.dto.SessionUser;
 import jakarta.annotation.Nullable;
@@ -24,6 +26,7 @@ public class HomeController {
     private final HistoryService historyService;
     private final RoomService roomService;
     private final MatchService matchService;
+    private final UserService userService;
     private static final String DEFAULT_USER_IMAGE = "https://avatars.githubusercontent.com/u/0?v=4";
 
     @GetMapping("/")
@@ -32,7 +35,7 @@ public class HomeController {
             return "redirect:/reply/multi";
         }
         Standby standby = user == null ? null : matchService.findStandbyById(user.getId());
-        setUserInfo(user, model);
+        setUserProfile(user, model);
         setPageTitle(model, "피어나");
         setStandbyInfo(model, standby);
         return "pages/index";
@@ -43,7 +46,7 @@ public class HomeController {
         if (user == null) {
             return "redirect:/";
         }
-        setUserInfo(user, model);
+        setUserProfile(user, model);
         setPageTitle(model, "Study - Solo");
         return "pages/reply/solo";
     }
@@ -58,7 +61,7 @@ public class HomeController {
             return "redirect:/";
         }
         Category category = roomService.findById(roomId).getCategory();
-        setUserInfo(user, model);
+        setUserProfile(user, model);
         setPageTitle(model, "Study - Multi");
         setRoomInfo(model, category, roomId);
         return "pages/reply/multi";
@@ -66,24 +69,26 @@ public class HomeController {
 
     @GetMapping("/reply/latest")
     public String latestReplies(@Nullable @LoginUser SessionUser user, Model model) {
-        setUserInfo(user, model);
+        setUserProfile(user, model);
         setPageTitle(model, "최신 사람 답변 모음 - 피어나");
         return "pages/reply/latest";
     }
 
     @GetMapping("/reply/others")
     public String othersReplies(@Nullable @LoginUser SessionUser user, Model model) {
-        setUserInfo(user, model);
+        setUserProfile(user, model);
         setPageTitle(model, "다른 사람 답변 모음 - 피어나");
         return "pages/reply/others";
     }
 
     @GetMapping("/mypage")
-    public String myPage(@Nullable @LoginUser SessionUser user, Model model) {
-        if (user == null) {
+    public String myPage(@Nullable @LoginUser SessionUser sessionUser, Model model) {
+        if (sessionUser == null) {
             return "redirect:/";
         }
-        setUserInfo(user, model);
+        User userinfo = userService.findById(sessionUser.getId());
+        model.addAttribute("repository", userinfo.getGithubRepo());
+        setUserProfile(sessionUser, model);
         setPageTitle(model, "My Page - 피어나");
 
         return "pages/user/mypage";
@@ -94,13 +99,13 @@ public class HomeController {
                         @Nullable @PathVariable("id") Long historyId) {
         DetailHistoryResponse detailHistory =
                 historyService.findDetailHistory(historyId, user == null ? null : user.getId());
-        setUserInfo(user, model);
+        setUserProfile(user, model);
         setPageTitle(model, "Reply - 피어나");
         setHistory(model, detailHistory);
         return "pages/reply/view";
     }
 
-    private void setUserInfo(@Nullable SessionUser user, Model model) {
+    private void setUserProfile(@Nullable SessionUser user, Model model) {
         Long userId = user != null ? user.getId() : null;
         String userName = user != null ? user.getName() : "Guest";
         String userImage = user != null ? user.getImageUrl() : DEFAULT_USER_IMAGE;

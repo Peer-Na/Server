@@ -8,7 +8,6 @@ import cos.peerna.domain.user.model.*;
 import cos.peerna.domain.user.repository.FollowRepository;
 import cos.peerna.domain.user.repository.UserRepository;
 import cos.peerna.global.security.dto.SessionUser;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,8 +24,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
     private final NotificationRepository notificationRepository;
-    private final HttpSession httpSession;
     private final PasswordEncoder passwordEncoder;
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found"));
+    }
 
     public Long signUp(UserRegisterRequestDto dto) {
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
