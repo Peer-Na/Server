@@ -1,0 +1,30 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH_GOOGLE_ID}
+            client-secret: ${OAUTH_GOOGLE_SECRET}
+            scope: profile,email
+            redirect-uri: ${OAUTH_GOOGLE_REDIRECT_URI}
+          github:
+            client-id: ${OAUTH_GITHUB_ID}
+            client-secret: ${OAUTH_GITHUB_SECRET}
+            scope: user,public_repo
+            redirect-uri: ${OAUTH_GITHUB_REDIRECT_URI}
+
+
+
+
+
+#            redirect-uri: "http://localhost:8080/login/oauth2/code/github"
+#            redirect-uri: "https://peerna.kr/login/oauth2/code/github"
+
+# OAuth 로그인 URL: http://localhost:8080/oauth2/authorization/github (vendor name)
+# 구글, 깃허브, 페이브북 등의 url은 설정하지 않아도
+# CommonOAuth2Provider 라는 enum에 이미 존재한다.
+# 네이버 카카오 등은 따로 추가를 해줘야 함
+# product level, 즉 일반 사용자들이 구글 로그인을 하려면 구글에 인증을 받아야 한다.
+# 현재는 등록된 계정만 Test 용도로 로그인 가능
+# 추가로 

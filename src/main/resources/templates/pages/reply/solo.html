@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content"
+      lang="ko">
+<head>
+    <script th:src="@{/js/reply/solo.js}"></script>
+    <script th:src="@{/js/reply/gpt.js}"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div class="bg-[#e5e5e5] min-h-screen p-8">
+    <div class="bg-white rounded-lg shadow-md mx-auto flex">
+        <!-- 문제풀이 섹션 -->
+        <div class="w-3/5 p-4">
+            <div th:replace="common/fragments/qa :: QA"></div>
+        </div>
+
+        <!-- 채팅창 섹션 -->
+        <div class="w-2/5">
+            <div th:replace="common/fragments/chat :: Chat"></div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

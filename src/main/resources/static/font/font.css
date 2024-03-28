@@ -1,0 +1,8 @@
+@font-face {
+    font-family: "BMDOHYEON_ttf";
+    src: url("./BMDOHYEON_ttf.ttf");
+}
+
+body {
+    font-family: "BMDOHYEON_ttf", serif;
+}

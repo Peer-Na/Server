@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head th:replace="~{common/fragments/config :: ConfigFragment}"></head>
+
+<body class="min-h-screen bg-[#f0f0f0]">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+<header th:replace="~{common/fragments/header :: HeaderFragment}"></header>
+
+    <th:block layout:fragment="Content"></th:block>
+
+</body>
+</html>

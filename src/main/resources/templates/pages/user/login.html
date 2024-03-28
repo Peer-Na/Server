@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link th:href="@{/main.css}" rel="stylesheet"/>
+    <script src="js/user/signIn.js"></script>
+</head>
+<body>
+<div class="rounded-lg border bg-card text-card-foreground shadow-sm max-w-md mx-auto mt-10" data-v0-t="card">
+    <div class="flex flex-col space-y-1.5 p-6">
+        <h3 class="font-semibold tracking-tight text-2xl">Login</h3>
+        <p class="text-sm text-muted-foreground">Please enter your email and password to login.</p>
+    </div>
+    <form class="flex flex-col" th:action="@{/api/login}" method="post">
+        <div class="p-6 space-y-4">
+            <div class="space-y-2">
+                <label
+                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        for="email"
+                >
+                    Email
+                </label>
+                <input
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        id="email"
+                        placeholder="m@example.com"
+                        required
+                        name="email"
+                />
+                <!--                        pattern="&quot;[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$&quot;"-->
+                <!--                        type="email"-->
+                <p class="text-red-500 text-xs hidden" id="email-error">
+                    Please enter a valid email address.
+                </p>
+            </div>
+            <div class="space-y-2">
+                <label
+                        class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        for="password"
+                >
+                    Password
+                </label>
+                <input
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        id="password"
+                        required
+                        minlength="8"
+                        type="password"
+                        name="password"
+                />
+                <p class="text-red-500 text-xs hidden" id="password-error">
+                    Password must be at least 8 characters long.
+                </p>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <button
+                            type="button"
+                            role="checkbox"
+                            aria-checked="false"
+                            data-state="unchecked"
+                            value="on"
+                            class="peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                            id="remember"
+                    ></button>
+                    <input
+                            aria-hidden="true"
+                            tabindex="-1"
+                            type="checkbox"
+                            value="on"
+                            style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px;"
+                    />
+                    <label class="font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-sm"
+                           for="remember">
+                        Remember me
+                    </label>
+                </div>
+                <a class="text-sm underline text-blue-500" href="#">
+                    Forgot Password?
+                </a>
+            </div>
+        </div>
+        <div class="flex items-center p-2">
+            <button
+                    class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-black text-white hover:bg-black/90 h-10 px-4 py-2 w-full"
+                    type="submit"
+            >
+                Sign In
+            </button>
+
+        </div>
+        <div class="flex items-center p-2">
+            <button
+                    class="inline-flex items-center justify-center rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-500 text-white hover:bg-black/90 h-10 px-4 py-2 w-full"
+                    type="button"
+                    onclick="location.href='http://localhost:8080/signup'"
+            >
+                Sign Up
+            </button>
+        </div>
+        <div class="items-center p-2">
+            <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full"
+                    type="button"
+                    onclick="location.href='http://localhost:8080/oauth2/authorization/github'">
+                Login with GitHub
+            </button>
+            <a class="inline-block w-full text-center text-sm underline" href="#" rel="ugc">
+                Forgot your password?
+            </a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

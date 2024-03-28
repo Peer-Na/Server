@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content"
+>
+<head>
+    <script th:src="@{js/index.js}"></script>
+</head>
+
+<body>
+
+<div id="category-info" style="display: none" th:value="${category}"></div>
+
+<div class="min-h-screen bg-gradient-to-b from-white via-pink-100 to-blue-200 flex flex-col items-center justify-center">
+
+    <main class="flex flex-col items-center"><h1 class="text-5xl font-bold text-center leading-tight mt-10">
+        컴퓨터 사이언스 동료학습 서비스 피어나
+    </h1>
+
+        <button sec:authorize="!isAuthenticated()" onclick="location.href='/oauth2/authorization/github'"
+                class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 mt-10 bg-black text-white px-8 py-3 rounded-full shadow-lg hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-opacity-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 0C4.477 0 0 4.477 0 10c0 4.419 2.865 8.17 6.839 9.493.5.092.682-.217.682-.482 0-.237-.008-.865-.013-1.701-2.782.604-3.37-1.338-3.37-1.338-.455-1.155-1.112-1.464-1.112-1.464-.908-.62.069-.608.069-.608 1.004.071 1.531 1.031 1.531 1.031.892 1.529 2.34 1.088 2.91.831.091-.644.349-1.088.635-1.339-2.227-.254-4.566-1.113-4.566-4.945 0-1.093.391-1.987 1.032-2.685-.104-.254-.448-1.27.098-2.646 0 0 .84-.269 2.75 1.025.8-.223 1.654-.334 2.504-.338.849.004 1.705.115 2.504.338 1.908-1.294 2.746-1.025 2.746-1.025.548 1.376.204 2.392.1 2.646.642.698 1.03 1.592 1.03 2.685 0 3.841-2.342 4.688-4.573 4.938.36.309.681.916.681 1.846 0 1.333-.012 2.409-.012 2.737 0 .267.18.578.688.48C17.139 18.168 20 14.417 20 10c0-5.523-4.477-10-10-10z" clip-rule="evenodd" />
+            </svg>
+            깃허브로 로그인하기
+        </button>
+
+        <div id="category-select" sec:authorize="isAuthenticated()" class="w-full max-w-md mx-auto text-center py-4">
+            <label for="category" class="block mb-2 text-xl font-medium text-gray-900 dark:text-gray-200">학습 카테고리 선택</label>
+            <select id="category" name="category" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-300 focus:border-blue-300 sm:text-sm rounded-md bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200">
+                <option selected value="OPERATING_SYSTEM">운영체제</option>
+                <option value="NETWORK">네트워크</option>
+                <option value="DATA_STRUCTURE_ALGORITHM">자료구조</option>
+            </select>
+            <div class="flex mt-4 w-3/4 items-center align-middle mx-auto">
+                <button onclick="startStudy()" type="button" class="mx-3 text-xl text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg px-5 py-2.5 text-center me-2 mb-2">
+                    GPT와 함께</button>
+
+                <button id="with-person-btn" onclick="joinQueue()" type="button" class="mx-3 text-xl text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg px-5 py-2.5 text-center me-2 mb-2">
+                    사람과 함께</button>
+            </div>
+        </div>
+
+
+
+        <div class="mt-20">
+<!--            TODO: 마스코트 이미지? 하나 있으면 괜찮을듯-->
+            <img
+                    src="/img/peerna_logo.png"
+                    alt="피어나"
+                    class="h-[400px] w-[600px]"
+                    width="600"
+                    height="400"
+                    style="aspect-ratio: 600 / 400; object-fit: contain;"
+            />
+        </div>
+    </main>
+</div>
+</body>
+</html>

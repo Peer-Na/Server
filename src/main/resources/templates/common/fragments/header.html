@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="HeaderFragment">
+
+<header class="w-full py-5 px-10 flex items-center bg-white">
+    <div id="hide" style="display: none">
+        <input id="userId" th:value="${userId}">
+        <input id="userName" th:value="${userName}">
+        <input id="userImage" th:value="${userImage}">
+    </div>
+
+    <div class="flex items-center justify-between w-full">
+        <div id="logo" class="flex items-center">
+            <a class="flex items-center" href="/" rel="ugc">
+                <img class="h-8 w-8 rounded-full" th:src="@{/img/peerna_logo.png}" alt="피어나">
+                <span class="text-xl">&nbsp;&nbsp;피어나</span>
+            </a>
+        </div>
+        <div id="nav-bar">
+            <nav class="flex space-x-8">
+                <a class="text-sm font-medium text-gray-600 hover:text-gray-900" href="/reply/latest">최근 답변 모음</a>
+                <a class="text-sm font-medium text-gray-600 hover:text-gray-900" href="/mypage">마이페이지</a>
+            </nav>
+        </div>
+    </div>
+</header>
+
+</html>

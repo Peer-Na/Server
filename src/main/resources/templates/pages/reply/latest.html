@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/defaultLayout}"
+      layout:fragment="Content"
+>
+<head>
+    <script th:src="@{/js/reply/latest.js}"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+<div id="hide" style="display: none" class="min-h-[100px] flex-wrap break-words whitespace-normal w-full leading-relaxed">
+</div>
+
+<div class="min-h-screen bg-gradient-to-b from-white via-pink-100 to-blue-200 flex flex-col items-center justify-start">
+    <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bold my-4">최근 답변 모음</h2>
+    </div>
+
+
+    <ul id="reply-list" class="grid grid-cols-1 gap-4 w-3/4 mb-5">
+        <li class="rounded-lg border bg-white bg-card text-card-foreground shadow-lg transform hover:scale-105 transition-transform duration-200 ease-in-out min-w-full"
+            data-v0-t="card">
+            <div class="flex flex-col space-y-1.5 p-6">
+                <div id="b" class="flex flex-row items-center h-16">
+      <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+        <img src="https://avatars.githubusercontent.com/u/0" alt="작성자 이미지">
+      </span>
+                    <span class="flex h-full w-full items-center justify-start rounded-full bg-muted ml-2">작성자</span>
+                    <span id="question" class="mb-4 text-xl font-semibold">질문</span>
+                </div>
+                <div id="a" class="flex ml-4 h-16">
+                    <h3 class="text-xl font-semibold whitespace-nowrap leading-none tracking-tight">
+                        내용
+                    </h3>
+                </div>
+            </div>
+            <div class="items-center p-6 flex justify-end">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="text-gray-400">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                </svg>
+                <span id="likeCount" class="ml-1.5">34</span>
+            </div>
+        </li>
+    </ul>
+
+    <div class="inline-flex">
+        <button id="prevBtn" style="display: none" onclick="prevBtnClick()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l">
+            Prev
+        </button>
+        <button id="nextBtn" style="display: none" onclick="nextBtnClick()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r">
+            Next
+        </button>
+    </div>
+
+</div>
+
+
+</body>
+</html>
