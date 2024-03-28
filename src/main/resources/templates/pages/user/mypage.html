@@ -26,6 +26,8 @@
                                         style="aspect-ratio: 96 / 96; object-fit: cover;"></div>
                                 <h3 th:text="${userName}" class="text-lg font-medium">유저 명</h3>
                                 <p th:text="${userEmail}" class="text-sm text-gray-500">유저 이메일</p>
+                                <p th:if="${repository}" th:text="'Github Repository: [' + ${repository} + ']'" class="text-sm text-gray-500"></p>
+                                <p th:unless="${repository}" class="text-sm text-gray-500">GitHub Repository: 미등록</p>
 <!--                                <button class="mt-3 border-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 mb-6">-->
 <!--                                    프로필 수정-->
 <!--                                </button>-->
