@@ -5,6 +5,8 @@ import cos.peerna.domain.match.model.Standby;
 import cos.peerna.domain.match.repository.StandbyRepository;
 import cos.peerna.domain.room.event.CreateRoomEvent;
 import cos.peerna.domain.user.model.Category;
+import cos.peerna.domain.user.model.User;
+import cos.peerna.domain.user.repository.UserRepository;
 import cos.peerna.global.security.dto.SessionUser;
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
@@ -29,6 +32,7 @@ public class MatchService {
     private final Scheduler scheduler;
     private final ApplicationEventPublisher eventPublisher;
     private final StandbyRepository standbyRepository;
+    private final UserRepository userRepository;
 
     @PostConstruct
     public void scheduleJob() {
@@ -44,14 +48,18 @@ public class MatchService {
         return standbyRepository.findById(userId).orElse(null);
     }
 
-    public Standby addStandby(SessionUser user, Category category) {
-        if (standbyRepository.existsById(user.getId())) {
+    @Transactional(readOnly = true)
+    public Standby addStandby(Long userId, Category category) {
+        if (standbyRepository.existsById(userId)) {
             return null;
         }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
         Standby standby = Standby.builder()
-                .id(user.getId())
-                .score(user.getScore())
+                .id(userId)
                 .category(category)
+                .score(user.getScore())
                 .createdAt(LocalDateTime.now())
                 .build();
 

@@ -24,7 +24,7 @@ public class MatchController {
     public ResponseEntity<Void> joinQueue(SimpMessageHeaderAccessor messageHeaderAccessor, String category) {
         SessionUser user = (SessionUser) messageHeaderAccessor.getSessionAttributes().get("user");
 
-        Standby standby =  matchService.addStandby(user, Category.valueOf(category));
+        Standby standby =  matchService.addStandby(user.getId(), Category.valueOf(category));
         if (standby == null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
