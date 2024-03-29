@@ -21,7 +21,6 @@ public class SessionUser implements UserDetails {
     private final String imageUrl;
     private final List<GrantedAuthority> grantedAuthorities;
     private String token;
-    private Integer score;
 
     public SessionUser(User user, String token, List<GrantedAuthority> authorities, String login) {
         this.id = user.getId();
@@ -29,7 +28,6 @@ public class SessionUser implements UserDetails {
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.imageUrl = user.getImageUrl();
-        this.score = user.getScore();
         this.token = token;
         this.login = login;
         this.grantedAuthorities = authorities;
