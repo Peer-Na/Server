@@ -2,7 +2,7 @@ package cos.peerna.global.common.controller;
 
 import cos.peerna.domain.history.dto.response.DetailHistoryResponse;
 import cos.peerna.domain.history.service.HistoryService;
-import cos.peerna.domain.match.model.Standby;
+import cos.peerna.domain.match.model.MatchTicket;
 import cos.peerna.domain.match.service.MatchService;
 import cos.peerna.domain.room.service.RoomService;
 import cos.peerna.domain.user.model.Category;
@@ -34,10 +34,10 @@ public class HomeController {
         if (user != null && roomService.findConnectedRoomId(user.getId()) != null) {
             return "redirect:/reply/multi";
         }
-        Standby standby = user == null ? null : matchService.findStandbyById(user.getId());
+        MatchTicket matchTicket = user == null ? null : matchService.findTicketById(user.getId());
         setUserProfile(user, model);
         setPageTitle(model, "피어나");
-        setStandbyInfo(model, standby);
+        setStandbyInfo(model, matchTicket);
         return "pages/index";
     }
 
@@ -129,8 +129,8 @@ public class HomeController {
         model.addAttribute("history", history);
     }
 
-    private void setStandbyInfo(Model model, Standby standby) {
-        model.addAttribute("category", standby == null ? null : standby.getCategory());
+    private void setStandbyInfo(Model model, MatchTicket matchTicket) {
+        model.addAttribute("category", matchTicket == null ? null : matchTicket.getCategory());
     }
 
     /*
