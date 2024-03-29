@@ -1,13 +1,12 @@
 package cos.peerna.domain.match.service;
 
 import cos.peerna.domain.match.job.MatchJob;
-import cos.peerna.domain.match.model.Standby;
-import cos.peerna.domain.match.repository.StandbyRepository;
+import cos.peerna.domain.match.model.MatchTicket;
+import cos.peerna.domain.match.repository.MatchTicketRepository;
 import cos.peerna.domain.room.event.CreateRoomEvent;
 import cos.peerna.domain.user.model.Category;
 import cos.peerna.domain.user.model.User;
 import cos.peerna.domain.user.repository.UserRepository;
-import cos.peerna.global.security.dto.SessionUser;
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -31,7 +30,7 @@ public class MatchService {
 
     private final Scheduler scheduler;
     private final ApplicationEventPublisher eventPublisher;
-    private final StandbyRepository standbyRepository;
+    private final MatchTicketRepository matchTicketRepository;
     private final UserRepository userRepository;
 
     @PostConstruct
@@ -44,48 +43,48 @@ public class MatchService {
         }
     }
 
-    public Standby findStandbyById(Long userId) {
-        return standbyRepository.findById(userId).orElse(null);
+    public MatchTicket findTicketById(Long userId) {
+        return matchTicketRepository.findById(userId).orElse(null);
     }
 
     @Transactional(readOnly = true)
-    public Standby addStandby(Long userId, Category category) {
-        if (standbyRepository.existsById(userId)) {
+    public MatchTicket addTicket(Long userId, Category category) {
+        if (matchTicketRepository.existsById(userId)) {
             return null;
         }
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        Standby standby = Standby.builder()
+        MatchTicket matchTicket = MatchTicket.builder()
                 .id(userId)
                 .category(category)
                 .score(user.getScore())
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return standbyRepository.save(standby);
+        return matchTicketRepository.save(matchTicket);
     }
 
     @Async
     public void duoMatching(Category category) {
-        List<Standby> standbyList = findStandbyByCategory(category);
-        if (standbyList.size() < 2) {
+        List<MatchTicket> matchTicketList = findTicketByCategory(category);
+        if (matchTicketList.size() < 2) {
             return;
         }
-        log.debug("Matching: {}", standbyList);
-        while (standbyList.size() >= 2) {
-            Standby standby = standbyList.remove(0);
-            for (int i = 0; i < standbyList.size(); i++) {
-                Standby target = standbyList.get(i);
-                if (!standby.isMatchable(target))
+        log.debug("Matching: {}", matchTicketList);
+        while (matchTicketList.size() >= 2) {
+            MatchTicket matchTicket = matchTicketList.remove(0);
+            for (int i = 0; i < matchTicketList.size(); i++) {
+                MatchTicket target = matchTicketList.get(i);
+                if (!matchTicket.isMatchable(target))
                     break;
-                if (target.isMatchable(standby)) {
-                    log.debug("Matched: {} and {}", standby, target);
-                    standbyList.remove(i);
-                    standbyRepository.delete(standby);
-                    standbyRepository.delete(target);
+                if (target.isMatchable(matchTicket)) {
+                    log.debug("Matched: {} and {}", matchTicket, target);
+                    matchTicketList.remove(i);
+                    matchTicketRepository.delete(matchTicket);
+                    matchTicketRepository.delete(target);
                     eventPublisher.publishEvent(CreateRoomEvent.of(new HashMap<>() {{
-                        put(standby.getId(), standby.getScore());
+                        put(matchTicket.getId(), matchTicket.getScore());
                         put(target.getId(), target.getScore());
                     }}, category));
                     break;
@@ -94,13 +93,13 @@ public class MatchService {
         }
     }
 
-    private List<Standby> findStandbyByCategory(Category category) {
-        return standbyRepository.findByCategoryOrderByScore(category);
+    private List<MatchTicket> findTicketByCategory(Category category) {
+        return matchTicketRepository.findByCategoryOrderByScore(category);
     }
 
-    public void cancelStandby(Long userId) {
-        Standby standby = standbyRepository.findById(userId)
+    public void cancelTicket(Long userId) {
+        MatchTicket matchTicket = matchTicketRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Standby not found"));
-        standbyRepository.delete(standby);
+        matchTicketRepository.delete(matchTicket);
     }
 }

@@ -1,6 +1,6 @@
 package cos.peerna.domain.match.controller;
 
-import cos.peerna.domain.match.model.Standby;
+import cos.peerna.domain.match.model.MatchTicket;
 import cos.peerna.domain.match.service.MatchService;
 import cos.peerna.domain.user.model.Category;
 import cos.peerna.global.security.dto.SessionUser;
@@ -24,11 +24,11 @@ public class MatchController {
     public ResponseEntity<Void> joinQueue(SimpMessageHeaderAccessor messageHeaderAccessor, String category) {
         SessionUser user = (SessionUser) messageHeaderAccessor.getSessionAttributes().get("user");
 
-        Standby standby =  matchService.addStandby(user.getId(), Category.valueOf(category));
-        if (standby == null) {
+        MatchTicket matchTicket =  matchService.addTicket(user.getId(), Category.valueOf(category));
+        if (matchTicket == null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        return ResponseEntity.created(URI.create(standby.getId().toString())).build();
+        return ResponseEntity.created(URI.create(matchTicket.getId().toString())).build();
     }
 
     @MessageMapping("/match/cancel")
@@ -36,7 +36,7 @@ public class MatchController {
     public ResponseEntity<Void> cancelJoinQueue(SimpMessageHeaderAccessor messageHeaderAccessor) {
         SessionUser user = (SessionUser) messageHeaderAccessor.getSessionAttributes().get("user");
 
-        matchService.cancelStandby(user.getId());
+        matchService.cancelTicket(user.getId());
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -12,8 +12,8 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 @Getter
-@RedisHash("peerna:standby")
-public final class Standby {
+@RedisHash("peerna:match:ticket")
+public final class MatchTicket {
     @Id
     private final Long id;
 
@@ -27,22 +27,22 @@ public final class Standby {
 
 
     @Builder
-    public Standby(Long id, Category category, Integer score, LocalDateTime createdAt) {
+    public MatchTicket(Long id, Category category, Integer score, LocalDateTime createdAt) {
         this.id = id;
         this.category = category;
         this.score = score;
         this.createdAt = createdAt;
     }
 
-    public boolean isMatchable(Standby standby) {
+    public boolean isMatchable(MatchTicket matchTicket) {
         long waitingTime = ChronoUnit.SECONDS.between(this.createdAt, LocalDateTime.now());
-        int scoreGap = Math.abs(this.score - standby.score);
+        int scoreGap = Math.abs(this.score - matchTicket.score);
         return scoreGap <= 50 + Math.log(1 + waitingTime) / Math.log(2);
     }
 
     @Override
     public String toString() {
-        return "Standby[" +
+        return "MatchTicket[" +
                 "id=" + id + ", " +
                 "score=" + score + ", " +
                 "createdAt=" + createdAt + ']';

@@ -18,7 +18,7 @@ public class MatchEventListener {
     public void webSocketDisconnectEventHandler(MatchWebSocketDisconnectEvent event) {
         log.debug("MatchWebSocketDisconnectEvent ---> {}", event);
         try {
-            matchService.cancelStandby(event.userId());
+            matchService.cancelTicket(event.userId());
         } catch (ResponseStatusException ignored) {}
     }
 }
