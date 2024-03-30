@@ -2,6 +2,6 @@ rootProject.name = 'peerna'
 include 'infra:db-redis'
 include 'infra:db-mariadb'
 include 'infra:storage-s3'
-include 'infra:storage-s4'
-findProject(':infra:storage-s4')?.name = 'storage-s4'
+
+include 'domain:intergrated'
 

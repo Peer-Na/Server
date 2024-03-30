@@ -1,6 +1,6 @@
 spring:
   config:
-    import: application-oauth.yml
+    import: application-oauth.yml, application-redis.yml, application-mariadb.yml
   boot:
     devtools:
       remote:
