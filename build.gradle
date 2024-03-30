@@ -3,29 +3,19 @@ plugins {
 	id 'org.springframework.boot' version '3.0.4'
 	id 'java'
 }
-//configurations {
-//	compileOnly {
-//		extendsFrom annotationProcessor
-//	}
-//	querydsl {
-//		extendsFrom compileClasspath
-//	}
-//}
 
-allprojects {
+subprojects {
 	group = 'cos'
 	version = '0.0.1-SNAPSHOT'
 	sourceCompatibility = '17'
+
 	apply plugin: 'io.spring.dependency-management'
 	apply plugin: 'java'
 	apply plugin: 'org.springframework.boot'
+
 	repositories {
 		mavenCentral()
 	}
-}
-
-subprojects {
-
 
 	dependencies {
 		compileOnly 'org.projectlombok:lombok'

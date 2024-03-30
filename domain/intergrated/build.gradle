@@ -1,14 +1,3 @@
-plugins {
-    id 'java'
-}
-
-group = 'cos'
-version = '0.0.1-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation project(':infra:db-redis')
     implementation project(':infra:db-mariadb')
@@ -54,8 +43,4 @@ dependencies {
 
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-}
-
-test {
-    useJUnitPlatform()
 }
