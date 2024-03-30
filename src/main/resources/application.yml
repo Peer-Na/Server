@@ -7,10 +7,6 @@ spring:
         debug: true
   session:
     store-type: redis
-  datasource:
-    url: jdbc:mariadb://${HOST}:3306/peerna
-    username: ${USERNAME}
-    password: ${PASSWORD}
   batch:
     job:
       enabled: false
@@ -29,10 +25,6 @@ spring:
     suffix: .html
     cache: false
     check-template-location: true
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: 6379
   servlet:
     multipart:
       max-file-size: 10MB
@@ -57,13 +49,5 @@ server:
   error:
     include-stacktrace: on_param
     include-message: always
-cloud:
-  aws:
-    credentials:
-      instance-profile: true
-    s3:
-      bucket: peerna-bucket
-    stack:
-      auto: false
 openai:
   token: ${GPT_TOKEN}

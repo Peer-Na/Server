@@ -1,0 +1,8 @@
+cloud:
+  aws:
+    credentials:
+      instance-profile: true
+    s3:
+      bucket: peerna-bucket
+    stack:
+      auto: false

@@ -1,6 +1,5 @@
 package cos.peerna.domain.gpt.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theokanning.openai.completion.chat.ChatCompletionChunk;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
@@ -22,8 +21,10 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
@@ -68,7 +69,7 @@ public class GPTService {
         pushChatMessages(event.userId(), systemMessage, userMessage, assistantMessage);
 
         History history = historyRepository.findById(event.historyId())
-                .orElseThrow(() -> new NotFoundException("history not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "history not found"));
         chatRepository.save(Chat.builder()
                 .writerId(0L)
                 .content(assistantMessageBuilder.toString())
@@ -84,7 +85,7 @@ public class GPTService {
      */
     public void sendMessage(SessionUser user, SendMessageRequest request) {
         Reply lastReply = replyRepository.findFirstByUserIdOrderByIdDesc(user.getId())
-                .orElseThrow(() -> new NotFoundException("reply not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "reply not found"));
 
         List<ChatMessage> messages = getChatMessages(user.getId());
         ChatMessage userMessage = new ChatMessage("user", request.message());
@@ -118,7 +119,7 @@ public class GPTService {
         List<ChatMessage> messageObjects = redisTemplate.opsForList().range(key, 0, -1);
         List<ChatMessage> messages = new ArrayList<>();
         if (messageObjects == null) {
-            throw new NotFoundException("messageObjects is null");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "messageObjects Not Found");
         }
         for (Object messageObject : messageObjects) {
             ChatMessage chatMessage = objectMapper.convertValue(messageObject, ChatMessage.class);

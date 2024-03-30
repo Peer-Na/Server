@@ -3,22 +3,54 @@ plugins {
 	id 'org.springframework.boot' version '3.0.4'
 	id 'java'
 }
-apply plugin: 'io.spring.dependency-management'
-group = 'cos'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	querydsl {
-		extendsFrom compileClasspath
+//configurations {
+//	compileOnly {
+//		extendsFrom annotationProcessor
+//	}
+//	querydsl {
+//		extendsFrom compileClasspath
+//	}
+//}
+
+allprojects {
+	group = 'cos'
+	version = '0.0.1-SNAPSHOT'
+	sourceCompatibility = '17'
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'java'
+	apply plugin: 'org.springframework.boot'
+	repositories {
+		mavenCentral()
 	}
 }
-repositories {
-	mavenCentral()
+
+subprojects {
+
+
+	dependencies {
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+	}
+
+	tasks.named('bootJar') {
+		enabled = false
+	}
+
+	tasks.named('jar') {
+		enabled = true
+	}
+
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
 }
+
 dependencies {
+	implementation project(':infra:db-redis')
+	implementation project(':infra:db-mariadb')
+//	implementation project(':infra:storage-s3')
+	implementation project(':infra:storage-s4')
+
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -29,22 +61,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-quartz'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-	implementation 'org.springframework.session:spring-session-data-redis'
 	implementation 'org.springframework:spring-messaging:6.0.7'
-
-	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2'
-	implementation 'software.amazon.awssdk:secretsmanager:2.20.23'
+	implementation 'org.springframework.session:spring-session-data-redis'
 
 	implementation 'org.jsoup:jsoup:1.15.4'
 	implementation 'org.openkoreantext:open-korean-text:2.1.0'
-	implementation group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
+	implementation 'org.webjars:stomp-websocket:2.3.3-1'
 	implementation 'org.json:json:20220320'
-	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.1.0'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
