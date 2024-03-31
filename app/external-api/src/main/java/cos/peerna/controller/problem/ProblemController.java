@@ -3,7 +3,7 @@ package cos.peerna.controller.problem;
 import cos.peerna.controller.problem.request.RegisterProblemRequest;
 import cos.peerna.controller.problem.response.AnswerAndKeywordResponse;
 import cos.peerna.controller.problem.response.KeywordResponse;
-import cos.peerna.controller.problem.response.ProblemResponse;
+import cos.peerna.controller.problem.response.ProblemListResponse;
 import cos.peerna.domain.problem.service.ProblemService;
 import cos.peerna.domain.user.model.Category;
 import java.net.URI;
@@ -38,20 +38,22 @@ public class ProblemController {
 
     @GetMapping("/answer")
     public ResponseEntity<AnswerAndKeywordResponse> getAnswerAndKeyword(@RequestParam Long problemId) {
-        return ResponseEntity.ok(problemService.getAnswerAndKeywordByProblemId(problemId));
+        return ResponseEntity.ok(AnswerAndKeywordResponse.of(problemService.getAnswerAndKeywordByProblemId(problemId)));
     }
 
     @GetMapping("/keyword")
     public ResponseEntity<KeywordResponse> findKeywords(
             @RequestParam Long problemId) {
-        return ResponseEntity.ok(problemService.findKeywordsByProblemId(problemId));
+        return ResponseEntity.ok(KeywordResponse.of(problemService.findKeywordsByProblemId(problemId)));
     }
 
     @GetMapping("/{category}")
-    public ResponseEntity<List<ProblemResponse>> findProblemsByCategory(
+    public ResponseEntity<ProblemListResponse> findProblemsByCategory(
             @PathVariable Category category,
             @RequestParam(required = false, defaultValue = "0") Long cursorId,
             @RequestParam(required = false, defaultValue = "10") int size) {
-        return ResponseEntity.ok(problemService.findProblemsByCategory(category, cursorId, size));
+        return ResponseEntity.ok(ProblemListResponse.builder()
+                .problems(problemService.findProblemsByCategory(category, cursorId, size))
+                .build());
     }
 }

@@ -2,9 +2,9 @@ package cos.peerna.domain.problem.service;
 
 import cos.peerna.domain.keyword.model.Keyword;
 import cos.peerna.domain.keyword.repository.KeywordRepository;
-import cos.peerna.domain.problem.dto.response.AnswerAndKeywordResponse;
-import cos.peerna.domain.problem.dto.response.KeywordResponse;
-import cos.peerna.domain.problem.dto.response.ProblemResponse;
+import cos.peerna.domain.problem.dto.result.AnswerAndKeywordResult;
+import cos.peerna.domain.problem.dto.result.KeywordResult;
+import cos.peerna.domain.problem.dto.result.ProblemResult;
 import cos.peerna.domain.problem.model.Problem;
 import cos.peerna.domain.problem.repository.ProblemRepository;
 import cos.peerna.domain.user.model.Category;
@@ -37,7 +37,7 @@ public class ProblemService {
         return newProblem.getId();
     }
 
-    public KeywordResponse findKeywordsByProblemId(Long problemId) {
+    public KeywordResult findKeywordsByProblemId(Long problemId) {
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Problem Not Found"));
         List<Keyword> keywords = keywordRepository.findTop3KeywordsByProblemOrderByCountDesc(problem);
@@ -45,27 +45,33 @@ public class ProblemService {
         for (Keyword keyword : keywords) {
             keywordStrings.add(keyword.getName());
         }
-        return KeywordResponse.of(keywordStrings);
+        return KeywordResult.builder()
+                .keywords(keywordStrings)
+                .build();
     }
 
-    public AnswerAndKeywordResponse getAnswerAndKeywordByProblemId(Long problemId) {
+    public AnswerAndKeywordResult getAnswerAndKeywordByProblemId(Long problemId) {
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Problem Not Found"));
         List<Keyword> top3Keywords = keywordRepository.findTop3KeywordsByProblemOrderByCountDesc(problem);
 
-        return AnswerAndKeywordResponse.of(problem.getAnswer(), top3Keywords);
+        return AnswerAndKeywordResult.of(problem.getAnswer(), top3Keywords);
     }
 
-    public List<ProblemResponse> findProblemsByCategory(Category category, Long cursorId, int size) {
+    public List<ProblemResult> findProblemsByCategory(Category category, Long cursorId, int size) {
         Pageable pageable = PageRequest.of(0, size, Sort.by("id").ascending());
 
         List<Problem> problems = problemRepository.findByCategoryAndIdGreaterThanOrderByIdAsc(category, cursorId, pageable);
-        List<ProblemResponse> problemResponseDtos = new ArrayList<>();
+        List<ProblemResult> problemResults = new ArrayList<>();
         for (Problem problem : problems) {
-            problemResponseDtos.add(ProblemResponse.of(
-                    problem.getId(), problem.getQuestion(), problem.getAnswer(), problem.getCategory()));
+            problemResults.add(ProblemResult.builder()
+                    .problemId(problem.getId())
+                    .question(problem.getQuestion())
+                    .answer(problem.getAnswer())
+                    .category(problem.getCategory())
+                    .build());
         }
-        return problemResponseDtos;
+        return problemResults;
     }
 
     private void validateProblem(String question) {

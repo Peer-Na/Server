@@ -2,7 +2,7 @@ package cos.peerna.service;
 
 import static org.junit.Assert.assertThrows;
 
-import cos.peerna.domain.problem.dto.request.RegisterProblemRequest;
+import cos.peerna.domain.problem.dto.command.RegisterProblemResult;
 import cos.peerna.domain.problem.service.ProblemService;
 import cos.peerna.domain.user.model.Category;
 import cos.peerna.domain.problem.model.Problem;
@@ -26,7 +26,7 @@ class ProblemServiceTest {
 	@DisplayName("중복 문제 검증")
 	void make() {
 		// 문제 등록
-		RegisterProblemRequest request = RegisterProblemRequest.of(
+		RegisterProblemResult request = RegisterProblemResult.of(
 				"hello", "안녕", Category.OPERATING_SYSTEM);
 		Problem problem = Problem.createProblem(
 				request.question(), request.answer(), request.category()
@@ -34,7 +34,7 @@ class ProblemServiceTest {
 		problemRepository.save(problem);
 
 		// 동일한 내용의 문제 등록 시도
-		RegisterProblemRequest duplicateRequest = RegisterProblemRequest.of(
+		RegisterProblemResult duplicateRequest = RegisterProblemResult.of(
 				"hello", "안녕", Category.OPERATING_SYSTEM);
 		Problem duplicateProblem = Problem.createProblem(
 				duplicateRequest.question(), duplicateRequest.answer(), duplicateRequest.category()
