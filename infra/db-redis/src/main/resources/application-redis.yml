@@ -1,0 +1,22 @@
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
+logging.level:
+  cos.peerna: ${LOG_LEVEL}
+  org:
+    hibernate:
+      SQL: info
+      orm.jdbc.bind: trace
+    springframework:
+      security: ${LOG_LEVEL}
+      data:
+        redis:
+          core:
+            RedisTemplate: debug
+
+#server:
+#  error:
+#    include-stacktrace: on_param
+#    include-message: always

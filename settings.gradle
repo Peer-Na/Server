@@ -1,1 +1,8 @@
 rootProject.name = 'peerna'
+include 'infra:db-redis'
+include 'infra:db-mariadb'
+include 'infra:storage-s3'
+
+include 'domain:integrated'
+
+include 'app:external-api'

@@ -1,0 +1,42 @@
+spring:
+  config:
+    import: application-oauth.yml, application-redis.yml, application-mariadb.yml
+  boot:
+    devtools:
+      remote:
+        debug: true
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO}
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 1000
+  sql:
+    init:
+      mode: ${SQL_INIT_MODE}
+
+logging.level:
+  cos.peerna: ${LOG_LEVEL}
+  org:
+    hibernate:
+      SQL: info
+      orm.jdbc.bind: trace
+    springframework:
+      data:
+        redis:
+          core:
+            RedisTemplate: debug
+
+server:
+  error:
+    include-stacktrace: on_param
+    include-message: always
+openai:
+  token: ${GPT_TOKEN}
