@@ -206,7 +206,11 @@ public class ReplyService {
                         .userImage(r.getUser().getImageUrl())
                         .build()
                 ).toList();
-        return ReplyWithPageInfoResult.of(replyResults, repliesPage.getTotalPages(), repliesPage.hasNext());
+        return ReplyWithPageInfoResult.builder()
+                .replies(replyResults)
+                .totalPages(repliesPage.getTotalPages())
+                .hasNextPage(repliesPage.hasNext())
+                .build();
     }
 
     /*
