@@ -14,7 +14,7 @@ import cos.peerna.domain.reply.model.Reply;
 import cos.peerna.domain.reply.repository.ReplyRepository;
 import cos.peerna.domain.room.model.Chat;
 import cos.peerna.domain.room.repository.ChatRepository;
-import cos.peerna.global.common.service.RedisKeyGenerator;
+import cos.peerna.RedisKeyGenerator;
 import cos.peerna.global.security.dto.SessionUser;
 import java.util.ArrayList;
 import java.util.List;
