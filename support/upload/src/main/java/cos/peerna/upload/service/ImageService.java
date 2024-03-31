@@ -1,4 +1,4 @@
-//package cos.peerna.global.common.service;
+package cos.peerna.upload.service;//package cos.peerna.global.common.service;
 //
 //import com.amazonaws.SdkClientException;
 //import com.amazonaws.services.s3.AmazonS3;
