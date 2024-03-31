@@ -1,6 +1,6 @@
 package cos.peerna.global.common.controller;
 
-import cos.peerna.domain.history.dto.response.DetailHistoryResponse;
+import cos.peerna.domain.history.dto.result.DetailHistoryResult;
 import cos.peerna.domain.history.service.HistoryService;
 import cos.peerna.domain.match.model.MatchTicket;
 import cos.peerna.domain.match.service.MatchService;
@@ -97,7 +97,7 @@ public class HomeController {
     @GetMapping("/reply/{id}")
     public String reply(@Nullable @LoginUser SessionUser user, Model model,
                         @Nullable @PathVariable("id") Long historyId) {
-        DetailHistoryResponse detailHistory =
+        DetailHistoryResult detailHistory =
                 historyService.findDetailHistory(historyId, user == null ? null : user.getId());
         setUserProfile(user, model);
         setPageTitle(model, "Reply - 피어나");
@@ -125,7 +125,7 @@ public class HomeController {
         model.addAttribute("roomId", roomId);
     }
 
-    private void setHistory(Model model, DetailHistoryResponse history) {
+    private void setHistory(Model model, DetailHistoryResult history) {
         model.addAttribute("history", history);
     }
 

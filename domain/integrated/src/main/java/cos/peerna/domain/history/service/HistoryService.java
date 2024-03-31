@@ -1,13 +1,13 @@
 package cos.peerna.domain.history.service;
 
-import cos.peerna.domain.history.dto.response.DetailHistoryResponse;
-import cos.peerna.domain.history.dto.response.HistoryResponse;
+import cos.peerna.domain.history.dto.result.DetailHistoryResult;
+import cos.peerna.domain.history.dto.result.HistoryResult;
 import cos.peerna.domain.history.model.History;
 import cos.peerna.domain.history.repository.HistoryRepository;
 import cos.peerna.domain.keyword.model.Keyword;
 import cos.peerna.domain.keyword.repository.KeywordRepository;
 import cos.peerna.domain.problem.model.Problem;
-import cos.peerna.domain.reply.dto.response.ReplyResponse;
+import cos.peerna.domain.reply.dto.result.ReplyResult;
 import cos.peerna.domain.room.dto.ChatMessageSendDto;
 import cos.peerna.domain.reply.model.Reply;
 import cos.peerna.domain.reply.repository.ReplyRepository;
@@ -36,14 +36,14 @@ public class HistoryService {
     private final KeywordRepository keywordRepository;
     private final ChatRepository chatRepository;
 
-    public List<HistoryResponse> findUserHistory(Long userId, Long cursorId, int size) {
+    public List<HistoryResult> findUserHistory(Long userId, Long cursorId, int size) {
         Pageable pageable = PageRequest.of(0, size, Sort.by(Sort.Direction.ASC, "id"));
         List<Reply> replyList = replyRepository.findRepliesByUserIdOrderByIdAsc(userId, cursorId, pageable);
 
         return replyList.stream().map(reply -> {
             History history = reply.getHistory();
             Problem problem = reply.getProblem();
-            return HistoryResponse.builder()
+            return HistoryResult.builder()
                     .historyId(history.getId())
                     .problemId(problem.getId())
                     .question(problem.getQuestion())
@@ -53,15 +53,15 @@ public class HistoryService {
         }).collect(Collectors.toList());
     }
 
-    public DetailHistoryResponse findDetailHistory(Long historyId, Long userId) {
+    public DetailHistoryResult findDetailHistory(Long historyId, Long userId) {
         History history = historyRepository.findByIdWithProblem(historyId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "History Not Found"));
         Problem problem = history.getProblem();
         List<Reply> replyList = replyRepository.findRepliesWithUserByHistoryOrderByHistoryIdDesc(history);
         List<Keyword> keywordList = keywordRepository.findTop3KeywordsByProblemOrderByCountDesc(problem);
-        List<ReplyResponse> replyResponseList = new ArrayList<>();
+        List<ReplyResult> replyResultList = new ArrayList<>();
         for (Reply reply : replyList) {
-            replyResponseList.add(ReplyResponse.builder()
+            replyResultList.add(ReplyResult.builder()
                     .replyId(reply.getId())
                     .likeCount((long) reply.getLikes().size())
                     .answer(reply.getAnswer())
@@ -73,11 +73,11 @@ public class HistoryService {
         }
 
         List<Chat> chat = chatRepository.findAllByHistory(history);
-        return DetailHistoryResponse.builder()
+        return DetailHistoryResult.builder()
                 .question(problem.getQuestion())
                 .exampleAnswer(problem.getAnswer())
                 .time(history.getTime())
-                .replies(replyResponseList)
+                .replies(replyResultList)
                 .keywords(keywordList.stream().map(Keyword::getName).collect(Collectors.toList()))
                 .chattings(chat.stream().map(ChatMessageSendDto::new).collect(Collectors.toList()))
                 .build();
