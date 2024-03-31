@@ -1,6 +1,10 @@
-package cos.peerna.global.config;
+package cos.peerna.config;
 
-import cos.peerna.global.security.*;
+import cos.peerna.global.security.CustomAuthenticationEntryPoint;
+import cos.peerna.global.security.CustomAuthenticationFailureHandler;
+import cos.peerna.global.security.CustomAuthenticationProvider;
+import cos.peerna.global.security.CustomAuthenticationSuccessHandler;
+import cos.peerna.global.security.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -7,11 +7,11 @@ import cos.peerna.domain.history.repository.HistoryRepository;
 import cos.peerna.domain.keyword.service.KeywordService;
 import cos.peerna.domain.problem.model.Problem;
 import cos.peerna.domain.problem.repository.ProblemRepository;
-import cos.peerna.domain.reply.dto.request.RegisterWithGPTRequest;
-import cos.peerna.domain.reply.dto.request.RegisterWithPersonRequest;
-import cos.peerna.domain.reply.dto.request.UpdateReplyRequest;
-import cos.peerna.domain.reply.dto.response.ReplyResponse;
-import cos.peerna.domain.reply.dto.response.ReplyWithPageInfoResponse;
+import cos.peerna.domain.reply.dto.command.RegisterWithGPTCommand;
+import cos.peerna.domain.reply.dto.command.RegisterWithPersonCommand;
+import cos.peerna.domain.reply.dto.command.UpdateReplyCommand;
+import cos.peerna.domain.reply.dto.result.ReplyResult;
+import cos.peerna.domain.reply.dto.result.ReplyWithPageInfoResult;
 import cos.peerna.domain.reply.model.Likey;
 import cos.peerna.domain.reply.model.Reply;
 import cos.peerna.domain.reply.repository.LikeyRepository;
@@ -58,31 +58,31 @@ public class ReplyService {
     private final ConnectRepository connectRepository;
 
     @Transactional
-    public String registerWithGPT(RegisterWithGPTRequest dto, SessionUser sessionUser) {
+    public String registerWithGPT(RegisterWithGPTCommand command, SessionUser sessionUser) {
         User user = userRepository.findById(sessionUser.getId())
                 .orElseThrow(() -> new UsernameNotFoundException("No User Data"));
-        Problem problem = problemRepository.findById(dto.problemId())
+        Problem problem = problemRepository.findById(command.problemId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Problem Not Found"));
         History history = historyRepository.save(History.of(problem));
         Reply reply = replyRepository.save(Reply.builderForRegister()
-                .answer(dto.answer())
+                .answer(command.answer())
                 .history(history)
                 .problem(problem)
                 .user(user)
                 .build());
 
-        keywordService.analyze(dto.answer(), dto.problemId());
+        keywordService.analyze(command.answer(), command.problemId());
 
         if (user.getGithubRepo() != null) {
             eventPublisher.publishEvent(CommitReplyEvent.of(
-                    sessionUser.getLogin(), sessionUser.getToken(), user.getGithubRepo(), problem, dto.answer()));
+                    sessionUser.getLogin(), sessionUser.getToken(), user.getGithubRepo(), problem, command.answer()));
         }
         /*
         TODO: user.getGithubRepo() == null 일 때, 유저에게 GithubRepo를 등록하라는 메시지 전달
          */
 
         eventPublisher.publishEvent(ReviewReplyEvent.of(
-                history.getId(), user.getId(), problem.getQuestion(), dto.answer()));
+                history.getId(), user.getId(), problem.getQuestion(), command.answer()));
         /*
         TODO: User의 Authority에 따라 ReviewReplyEvent 발행 여부 결정
          */
@@ -91,7 +91,7 @@ public class ReplyService {
     }
 
     @Transactional
-    public String registerWithPerson(RegisterWithPersonRequest dto, SessionUser sessionUser) {
+    public String registerWithPerson(RegisterWithPersonCommand command, SessionUser sessionUser) {
         User user = userRepository.findById(sessionUser.getId())
                 .orElseThrow(() -> new UsernameNotFoundException("No User Data"));
         Connect connect = connectRepository.findById(user.getId())
@@ -102,7 +102,7 @@ public class ReplyService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "History or Problem Not Found"));
         Problem problem = history.getProblem();
         Reply reply = replyRepository.save(Reply.builderForRegister()
-                .answer(dto.answer())
+                .answer(command.answer())
                 .history(history)
                 .problem(problem)
                 .user(user)
@@ -111,17 +111,17 @@ public class ReplyService {
         /*
         TODO: 서비스가 한가로운 시간에 Batch로 처리 하는 시스템으로 변경
          */
-        keywordService.analyze(dto.answer(), problem.getId());
+        keywordService.analyze(command.answer(), problem.getId());
 
         if (user.getGithubRepo() != null) {
             eventPublisher.publishEvent(CommitReplyEvent.of(
-                    sessionUser.getLogin(), sessionUser.getToken(), user.getGithubRepo(), problem, dto.answer()));
+                    sessionUser.getLogin(), sessionUser.getToken(), user.getGithubRepo(), problem, command.answer()));
         }
         /*
         TODO: user.getGithubRepo() == null 일 때, 유저에게 GithubRepo를 등록하라는 메시지 전달
          */
 
-        ReplyResponse replyResponse = ReplyResponse.builder()
+        ReplyResult replyResult = ReplyResult.builder()
                 .historyId(reply.getHistory().getId())
                 .replyId(reply.getId())
                 .likeCount(reply.getLikeCount())
@@ -133,26 +133,26 @@ public class ReplyService {
                 .userName(reply.getUser().getName())
                 .userImage(reply.getUser().getImageUrl())
                 .build();
-        simpMessagingTemplate.convertAndSend("/room/" + room.getId() + "/answer", replyResponse);
+        simpMessagingTemplate.convertAndSend("/room/" + room.getId() + "/answer", replyResult);
 
         return String.valueOf(reply.getId());
     }
 
     @Transactional
-    public void modify(UpdateReplyRequest dto, SessionUser sessionUser) {
+    public void modify(UpdateReplyCommand command, SessionUser sessionUser) {
         User user = userRepository.findById(sessionUser.getId())
                 .orElseThrow(() -> new UsernameNotFoundException("No User Data"));
-        Problem problem = problemRepository.findById(dto.problemId())
+        Problem problem = problemRepository.findById(command.problemId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Problem Not Found"));
         Reply reply = replyRepository.findFirstByUserAndProblemOrderByIdDesc(user, problem)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reply Not Found"));
 
-        reply.modifyAnswer(dto.answer());
-        keywordService.analyze(dto.answer(), dto.problemId());
+        reply.modifyAnswer(command.answer());
+        keywordService.analyze(command.answer(), command.problemId());
 
         if (user.getGithubRepo() != null) {
             eventPublisher.publishEvent(CommitReplyEvent.of(
-                    sessionUser.getLogin(), sessionUser.getToken(), user.getGithubRepo(), problem, dto.answer()));
+                    sessionUser.getLogin(), sessionUser.getToken(), user.getGithubRepo(), problem, command.answer()));
         }
         /*
         TODO: user.getGithubRepo() == null 일 때, 유저에게 GithubRepo를 등록하라는 메시지 전달
@@ -162,7 +162,7 @@ public class ReplyService {
     /*
     TODO: 쿼리 개선(?)
      */
-    public List<ReplyResponse> findReplies(Long cursorId, int size) {
+    public List<ReplyResult> findReplies(Long cursorId, int size) {
         Pageable pageable = PageRequest.of(0, size, Sort.by("id").descending());
 
         List<Reply> replies;
@@ -172,7 +172,7 @@ public class ReplyService {
             replies = replyRepository.findRepliesByIdLessThanOrderByIdDesc(cursorId, pageable);
         }
         return replies.stream()
-                .map(r -> ReplyResponse.builder()
+                .map(r -> ReplyResult.builder()
                         .historyId(r.getHistory().getId())
                         .replyId(r.getId())
                         .likeCount(r.getLikeCount())
@@ -186,7 +186,7 @@ public class ReplyService {
                 ).collect(Collectors.toList());
     }
 
-    public ReplyWithPageInfoResponse findRepliesByProblem(Long problemId, int page) {
+    public ReplyWithPageInfoResult findRepliesByProblem(Long problemId, int page) {
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Problem Not Found"));
 
@@ -194,8 +194,8 @@ public class ReplyService {
         Page<Reply> repliesPage = replyRepository.findRepliesByProblemOrderByLikeCountDesc(problem, pageable);
 
         List<Reply> replies = repliesPage.getContent();
-        List<ReplyResponse> replyResponses = replies.stream()
-                .map(r -> ReplyResponse.builder()
+        List<ReplyResult> replyResults = replies.stream()
+                .map(r -> ReplyResult.builder()
                         .replyId(r.getId())
                         .likeCount(r.getLikeCount())
                         .problemId(r.getProblem().getId())
@@ -206,18 +206,18 @@ public class ReplyService {
                         .userImage(r.getUser().getImageUrl())
                         .build()
                 ).toList();
-        return ReplyWithPageInfoResponse.from(replyResponses, repliesPage.getTotalPages(), repliesPage.hasNext());
+        return ReplyWithPageInfoResult.of(replyResults, repliesPage.getTotalPages(), repliesPage.hasNext());
     }
 
     /*
     TODO: 오름차순으로 변경, (동적 쿼리 사용)
     */
-    public List<ReplyResponse> findUserReplies(Long userId, Long cursorId, int size) {
+    public List<ReplyResult> findUserReplies(Long userId, Long cursorId, int size) {
         Pageable pageable = PageRequest.of(0, size, Sort.by("id").ascending());
         List<Reply> replies = replyRepository.findRepliesByUserIdOrderByIdAsc(userId, cursorId, pageable);
-        List<ReplyResponse> replyResponses = new ArrayList<>();
+        List<ReplyResult> replyResults = new ArrayList<>();
         for (Reply reply : replies) {
-            replyResponses.add(ReplyResponse.builder()
+            replyResults.add(ReplyResult.builder()
                     .historyId(reply.getHistory().getId())
                     .replyId(reply.getId())
                     .likeCount(reply.getLikeCount())
@@ -230,7 +230,7 @@ public class ReplyService {
                     .alreadyLiked(reply.isLikedBy(userId))
                     .build());
         }
-        return replyResponses;
+        return replyResults;
     }
 
     @Transactional

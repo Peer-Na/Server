@@ -3,11 +3,10 @@ package cos.peerna.domain.user.service;
 import cos.peerna.domain.notification.model.Notification;
 import cos.peerna.domain.notification.model.NotificationType;
 import cos.peerna.domain.notification.repository.NotificationRepository;
-import cos.peerna.domain.user.dto.UserRegisterRequestDto;
+import cos.peerna.domain.user.dto.command.UserRegisterCommand;
 import cos.peerna.domain.user.model.*;
 import cos.peerna.domain.user.repository.FollowRepository;
 import cos.peerna.domain.user.repository.UserRepository;
-import cos.peerna.global.security.dto.SessionUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,21 +30,21 @@ public class UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found"));
     }
 
-    public Long signUp(UserRegisterRequestDto dto) {
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+    public Long signUp(UserRegisterCommand command) {
         User user = userRepository.save(User.builder()
-                .id(dto.getId())
-                .name(dto.getName())
-                .email(dto.getEmail())
+                .id(command.id())
+                .name(command.name())
+                .email(command.email())
                 .imageUrl("https://avatars.githubusercontent.com/u/0?v=4")
                 .introduce("")
                 .role(Role.UNCERTIFICATED)
+                .password(passwordEncoder.encode(command.password()))
                 .build());
         return user.getId();
     }
 
-    public void delete(SessionUser sessionUser) {
-        User user = userRepository.findById(sessionUser.getId())
+    public void delete(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found"));
         userRepository.delete(user);
     }

@@ -39,7 +39,7 @@ public class User {
     private final List<Follow> followings = new ArrayList<>();
 
     @Builder
-    public User(Long id, String name, String email, String imageUrl, String introduce, Role role) {
+    public User(Long id, String name, String email, String imageUrl, String introduce, Role role, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -47,7 +47,7 @@ public class User {
         this.role = role;
         this.introduce = introduce;
         this.githubRepo = null;
-        this.password = new BCryptPasswordEncoder().encode("password");
+        this.password = password;
         this.score = 1000;
         this.category = Category.OPERATING_SYSTEM;
     }
