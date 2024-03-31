@@ -1,0 +1,16 @@
+{
+  "name": "frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tailwindcss -i main.css -o ../resources/static/main.css"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.3"
+  },
+  "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
+    "flowbite": "^2.3.0",
+    "sockjs-client": "^1.6.1"
+  }
+}
