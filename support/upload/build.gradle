@@ -1,0 +1,3 @@
+dependencies {
+    implementation project(':infra:storage-s3')
+}

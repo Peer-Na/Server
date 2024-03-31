@@ -1,7 +1,6 @@
 dependencies {
     implementation project(':infra:db-redis')
     implementation project(':infra:db-mariadb')
-    implementation project(':infra:storage-s3')
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'

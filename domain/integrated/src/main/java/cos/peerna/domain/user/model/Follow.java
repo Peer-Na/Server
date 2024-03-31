@@ -1,6 +1,6 @@
 package cos.peerna.domain.user.model;
 
-import cos.peerna.global.common.model.BaseTimeEntity;
+import cos.peerna.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

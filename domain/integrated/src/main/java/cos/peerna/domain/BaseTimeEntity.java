@@ -1,4 +1,4 @@
-package cos.peerna.global.common.model;
+package cos.peerna.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

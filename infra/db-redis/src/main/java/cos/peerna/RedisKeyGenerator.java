@@ -1,4 +1,4 @@
-package cos.peerna.global.common.service;
+package cos.peerna;
 
 import org.springframework.stereotype.Component;
 
