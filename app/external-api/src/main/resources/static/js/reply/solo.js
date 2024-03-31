@@ -28,7 +28,7 @@ function loadNewProblems() {
         }
     }).then(function (response) {
         console.log(response);
-        const problems = response.data;
+        const problems = response.data.problems;
         if (problems.length === 0) {
             alert('해당 카테고리에는 더 이상 문제가 존재하지 않습니다.');
             return;

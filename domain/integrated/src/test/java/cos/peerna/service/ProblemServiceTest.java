@@ -26,16 +26,22 @@ class ProblemServiceTest {
 	@DisplayName("중복 문제 검증")
 	void make() {
 		// 문제 등록
-		RegisterProblemResult request = RegisterProblemResult.of(
-				"hello", "안녕", Category.OPERATING_SYSTEM);
+		RegisterProblemResult request = RegisterProblemResult.builder()
+				.question("hello")
+				.answer("안녕")
+				.category(Category.OPERATING_SYSTEM)
+				.build();
 		Problem problem = Problem.createProblem(
 				request.question(), request.answer(), request.category()
 		);
 		problemRepository.save(problem);
 
 		// 동일한 내용의 문제 등록 시도
-		RegisterProblemResult duplicateRequest = RegisterProblemResult.of(
-				"hello", "안녕", Category.OPERATING_SYSTEM);
+		RegisterProblemResult duplicateRequest = RegisterProblemResult.builder()
+				.question("hello")
+				.answer("안녕")
+				.category(Category.OPERATING_SYSTEM)
+				.build();
 		Problem duplicateProblem = Problem.createProblem(
 				duplicateRequest.question(), duplicateRequest.answer(), duplicateRequest.category()
 		);

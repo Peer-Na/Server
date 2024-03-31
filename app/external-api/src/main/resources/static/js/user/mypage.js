@@ -30,7 +30,7 @@ function loadMoreMyReplies() {
         }
     }).then(function (response) {
         console.log(response);
-        const replies = response.data;
+        const replies = response.data.replyList;
         if (replies.length === 0) {
             if (cursorId !== 0) {
                 alert('더 이상 불러올 답변이 존재하지 않습니다.');

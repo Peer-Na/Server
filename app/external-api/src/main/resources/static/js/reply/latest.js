@@ -12,7 +12,7 @@ function loadLatestReplies(cursorId) {
         }
     }).then(function (response) {
         console.log(response);
-        const replies = response.data;
+        const replies = response.data.replyList;
 
         const replyList = document.getElementById('reply-list');
         if (replies.length === 0) {
