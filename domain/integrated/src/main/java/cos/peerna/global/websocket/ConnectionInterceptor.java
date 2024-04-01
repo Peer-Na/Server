@@ -39,9 +39,8 @@ public class ConnectionInterceptor implements ChannelInterceptor {
                 TODO: 모듈 분리 후 주석 해제
                 eventPublisher.publishEvent(MatchWebSocketDisconnectEvent.of(user.getId()));
                 eventPublisher.publishEvent(RoomWebSocketDisconnectEvent.of(user.getId(), user.getName()));
-                 */
                 eventPublisher.publishEvent(GPTWebSocketDisconnectEvent.of(user.getId()));
-
+                 */
                 break;
             default:
                 break;

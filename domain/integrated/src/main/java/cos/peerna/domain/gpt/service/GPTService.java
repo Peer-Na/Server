@@ -6,7 +6,7 @@ import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
 import cos.peerna.domain.gpt.dto.request.SendMessageRequest;
-import cos.peerna.domain.gpt.event.ReviewReplyEvent;
+import cos.peerna.domain.gpt.event.RegisterReplyEvent;
 import cos.peerna.domain.gpt.model.GPT;
 import cos.peerna.domain.history.model.History;
 import cos.peerna.domain.history.repository.HistoryRepository;
@@ -47,7 +47,7 @@ public class GPTService {
     /*
     TODO: Async 로 변경
      */
-    public void reviewReply(ReviewReplyEvent event) {
+    public void reviewReply(RegisterReplyEvent event) {
         /*
         TODO: 사용자의 권한에 따른 gpt 모델 선택
          */

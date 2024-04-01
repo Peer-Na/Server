@@ -9,15 +9,14 @@ import cos.peerna.domain.user.model.User;
 import cos.peerna.domain.user.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +28,9 @@ import org.springframework.web.server.ResponseStatusException;
 public class MatchService {
 
     private final Scheduler scheduler;
-    private final ApplicationEventPublisher eventPublisher;
     private final MatchTicketRepository matchTicketRepository;
     private final UserRepository userRepository;
+    private final KafkaTemplate<String, CreateRoomEvent> kafkaTemplate;
 
     @PostConstruct
     public void scheduleJob() {
@@ -83,10 +82,7 @@ public class MatchService {
                     matchTicketList.remove(i);
                     matchTicketRepository.delete(matchTicket);
                     matchTicketRepository.delete(target);
-                    eventPublisher.publishEvent(CreateRoomEvent.of(new HashMap<>() {{
-                        put(matchTicket.getId(), matchTicket.getScore());
-                        put(target.getId(), target.getScore());
-                    }}, category));
+                    kafkaTemplate.send("peerna:matched", CreateRoomEvent.of(List.of(matchTicket.getId(), target.getId()), category));
                     break;
                 }
             }

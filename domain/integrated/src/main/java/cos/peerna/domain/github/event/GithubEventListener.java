@@ -11,7 +11,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ReplyEventListener {
+public class GithubEventListener {
 
     private final GithubService githubService;
 
