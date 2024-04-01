@@ -33,7 +33,7 @@ public class KafkaConsumerConfig {
 
         ConcurrentKafkaListenerContainerFactory<String, CreateRoomEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConsumerFactory(greetingConsumerFactory());
+        factory.setConsumerFactory(createRoomEventConsumerFactory());
         return factory;
     }
 }
