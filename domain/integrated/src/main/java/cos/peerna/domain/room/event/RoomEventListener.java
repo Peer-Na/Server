@@ -4,6 +4,7 @@ import cos.peerna.domain.room.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -13,9 +14,11 @@ public class RoomEventListener {
 
     private final RoomService roomService;
 
-    @EventListener
-    public void createRoomEventHandler(CreateRoomEvent event) {
-        log.debug("RoomCreateEvent ---> {}", event);
+    @KafkaListener(
+            topics = "peerna:matched",
+            containerFactory = "greetingKafkaListenerContainerFactory")
+    public void greetingListener(CreateRoomEvent event) {
+        log.debug("RoomCreateEvent!! ---> {}", event);
         roomService.createRoom(event);
     }
 

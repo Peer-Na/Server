@@ -37,25 +37,16 @@ public class RoomService {
     private final ProblemRepository problemRepository;
 
     public void createRoom(CreateRoomEvent event) {
-        List<Long> connectedUserIds = new ArrayList<>(event.userScore().keySet());
-        event.userScore().entrySet().stream()
-                .sorted(Entry.comparingByValue(Comparator.reverseOrder()))
-                .forEach(entry -> {
-                    Long userId = entry.getKey();
-                    connectedUserIds.add(userId);
-                });
-
         History history = historyRepository.save(History.of(LocalDate.now()));
         Room room = roomRepository.save(Room.builder()
                         .category(event.category())
                         .historyId(history.getId())
                         .build());
 
-        for (Long userId : connectedUserIds) {
+        for (Long userId : event.userIds()) {
             /*
             TODO: 더 효율적이고 보안적으로 훌륭한 방법 찾기 (HttpSession 을 시도했으나 실패)
              */
-            log.debug("Connect Save: roomId={}, userId={}", room.getId(), userId);
             connectRepository.save(Connect.of(userId, room.getId()));
             template.convertAndSend("/user/" + userId + "/match", room.getId());
         }

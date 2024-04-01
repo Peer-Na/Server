@@ -2,14 +2,14 @@ package cos.peerna.domain.room.event;
 
 
 import cos.peerna.domain.user.model.Category;
-import java.util.Map;
+import java.util.List;
 
 public record CreateRoomEvent(
-        Map<Long, Integer> userScore,
+        List<Long> userIds,
         Category category
 ) {
 
-    public static CreateRoomEvent of(Map<Long, Integer> userScore, Category category) {
-        return new CreateRoomEvent(userScore, category);
+    public static CreateRoomEvent of(List<Long> userIds, Category category) {
+        return new CreateRoomEvent(userIds, category);
     }
 }
