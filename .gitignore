@@ -45,6 +45,4 @@ out/
 
 .DS_Store
 
-deploy.sh
-
 docker-compose.yml
