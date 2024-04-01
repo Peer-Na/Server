@@ -1,5 +1,6 @@
 package cos.peerna.global.config;
 
+import cos.peerna.domain.gpt.event.RegisterReplyEvent;
 import cos.peerna.domain.room.event.CreateRoomEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 @Configuration
 public class KafkaProducerConfig {
     @Bean
-    public ProducerFactory<String, CreateRoomEvent> greetingProducerFactory() {
+    public ProducerFactory<String, CreateRoomEvent> createRoomEventProducerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 "localhost:9092");
@@ -28,7 +29,25 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, CreateRoomEvent> greetingKafkaTemplate() {
-        return new KafkaTemplate<>(greetingProducerFactory());
+    public KafkaTemplate<String, CreateRoomEvent> createRoomEventKafkaTemplate() {
+        return new KafkaTemplate<>(createRoomEventProducerFactory());
+    }
+
+    @Bean
+    public ProducerFactory<String, RegisterReplyEvent> reviewReplyEventProducerFactory() {
+        Map<String, Object> config = new HashMap<>();
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                "localhost:9092");
+        config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                StringSerializer.class);
+        config.put(
+                ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+                JsonSerializer.class);
+        return new DefaultKafkaProducerFactory<>(config);
+    }
+
+    @Bean
+    public KafkaTemplate<String, RegisterReplyEvent> reviewReplyEventKafkaTemplate() {
+        return new KafkaTemplate<>(reviewReplyEventProducerFactory());
     }
 }

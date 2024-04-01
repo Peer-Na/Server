@@ -4,6 +4,7 @@ import cos.peerna.domain.gpt.service.GPTService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -13,9 +14,11 @@ public class GPTEventListener {
 
     private final GPTService gptService;
 
-    @EventListener
-    public void transactionalEventListenerAfterCommit(ReviewReplyEvent event) {
-        log.info("Review Reply Event Published: {}", event);
+    @KafkaListener(
+            topics = "peerna:openai:register-reply",
+            containerFactory = "registerReplyEventKafkaListenerContainerFactory")
+    public void registerReplyEventListener(RegisterReplyEvent event) {
+        log.debug("RegisterReplyEvent!! ---> {}", event);
         gptService.reviewReply(event);
     }
 

@@ -1,7 +1,7 @@
 package cos.peerna.domain.reply.service;
 
 import cos.peerna.domain.github.event.CommitReplyEvent;
-import cos.peerna.domain.gpt.event.ReviewReplyEvent;
+import cos.peerna.domain.gpt.event.RegisterReplyEvent;
 import cos.peerna.domain.history.model.History;
 import cos.peerna.domain.history.repository.HistoryRepository;
 import cos.peerna.domain.keyword.service.KeywordService;
@@ -33,6 +33,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,8 @@ public class ReplyService {
 
     private static final int PAGE_SIZE = 10;
 
-    private final ApplicationEventPublisher eventPublisher;
+    private final KafkaTemplate<String, RegisterReplyEvent> registerReplyEventKafkaTemplate;
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ReplyRepository replyRepository;
     private final UserRepository userRepository;
@@ -74,15 +76,24 @@ public class ReplyService {
         keywordService.analyze(command.answer(), command.problemId());
 
         if (user.getGithubRepo() != null) {
-            eventPublisher.publishEvent(CommitReplyEvent.of(
-                    sessionUser.getLogin(), sessionUser.getToken(), user.getGithubRepo(), problem, command.answer()));
+            applicationEventPublisher.publishEvent(CommitReplyEvent.builder()
+                    .githubLogin(sessionUser.getLogin())
+                    .githubToken(sessionUser.getToken())
+                    .githubRepo(user.getGithubRepo())
+                    .problem(problem)
+                    .answer(command.answer())
+                    .build());
         }
         /*
         TODO: user.getGithubRepo() == null 일 때, 유저에게 GithubRepo를 등록하라는 메시지 전달
          */
 
-        eventPublisher.publishEvent(ReviewReplyEvent.of(
-                history.getId(), user.getId(), problem.getQuestion(), command.answer()));
+        registerReplyEventKafkaTemplate.send("peerna:openai:register-reply", RegisterReplyEvent.builder()
+                .historyId(history.getId())
+                .userId(user.getId())
+                .question(problem.getQuestion())
+                .answer(command.answer())
+                .build());
         /*
         TODO: User의 Authority에 따라 ReviewReplyEvent 발행 여부 결정
          */
@@ -114,14 +125,19 @@ public class ReplyService {
         keywordService.analyze(command.answer(), problem.getId());
 
         if (user.getGithubRepo() != null) {
-            eventPublisher.publishEvent(CommitReplyEvent.of(
-                    sessionUser.getLogin(), sessionUser.getToken(), user.getGithubRepo(), problem, command.answer()));
+            applicationEventPublisher.publishEvent(CommitReplyEvent.builder()
+                    .githubLogin(sessionUser.getLogin())
+                    .githubToken(sessionUser.getToken())
+                    .githubRepo(user.getGithubRepo())
+                    .problem(problem)
+                    .answer(command.answer())
+                    .build());
         }
         /*
         TODO: user.getGithubRepo() == null 일 때, 유저에게 GithubRepo를 등록하라는 메시지 전달
          */
 
-        ReplyResult replyResult = ReplyResult.builder()
+        registerReplyEventKafkaTemplate.send("peerna:room:register-reply", RegisterReplyEvent.builder()
                 .historyId(reply.getHistory().getId())
                 .replyId(reply.getId())
                 .likeCount(reply.getLikeCount())
@@ -132,8 +148,7 @@ public class ReplyService {
                 .userId(reply.getUser().getId())
                 .userName(reply.getUser().getName())
                 .userImage(reply.getUser().getImageUrl())
-                .build();
-        simpMessagingTemplate.convertAndSend("/room/" + room.getId() + "/answer", replyResult);
+                .build());
 
         return String.valueOf(reply.getId());
     }
@@ -151,8 +166,13 @@ public class ReplyService {
         keywordService.analyze(command.answer(), command.problemId());
 
         if (user.getGithubRepo() != null) {
-            eventPublisher.publishEvent(CommitReplyEvent.of(
-                    sessionUser.getLogin(), sessionUser.getToken(), user.getGithubRepo(), problem, command.answer()));
+            applicationEventPublisher.publishEvent(CommitReplyEvent.builder()
+                    .githubLogin(sessionUser.getLogin())
+                    .githubToken(sessionUser.getToken())
+                    .githubRepo(user.getGithubRepo())
+                    .problem(problem)
+                    .answer(command.answer())
+                    .build());
         }
         /*
         TODO: user.getGithubRepo() == null 일 때, 유저에게 GithubRepo를 등록하라는 메시지 전달
