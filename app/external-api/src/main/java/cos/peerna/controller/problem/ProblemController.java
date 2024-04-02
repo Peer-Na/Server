@@ -36,6 +36,9 @@ public class ProblemController {
         return ResponseEntity.created(location).build();
     }
 
+    /*
+    TODO: /answer, /keyword 2개를 하나로 줄이기
+     */
     @GetMapping("/answer")
     public ResponseEntity<AnswerAndKeywordResponse> getAnswerAndKeyword(@RequestParam Long problemId) {
         return ResponseEntity.ok(AnswerAndKeywordResponse.of(problemService.getAnswerAndKeywordByProblemId(problemId)));
