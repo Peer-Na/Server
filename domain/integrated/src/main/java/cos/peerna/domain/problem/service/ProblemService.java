@@ -50,6 +50,9 @@ public class ProblemService {
                 .build();
     }
 
+    /*
+    TODO: 쿼리 최적화 필요 2개 예상했지만 3개가 전송되고 있고 1개로 줄일 수 있을 것 같음
+     */
     public AnswerAndKeywordResult getAnswerAndKeywordByProblemId(Long problemId) {
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Problem Not Found"));
