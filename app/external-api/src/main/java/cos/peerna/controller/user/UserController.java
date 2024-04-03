@@ -1,13 +1,19 @@
 package cos.peerna.controller.user;
 
+import cos.peerna.controller.dto.ResponseDto;
 import cos.peerna.controller.user.request.UpdateGithubRepoRequest;
 import cos.peerna.controller.user.request.UserRegisterRequest;
+import cos.peerna.controller.user.response.UpdateGithubRepoResponse;
+import cos.peerna.domain.user.dto.UserProfile;
 import cos.peerna.domain.user.service.UserService;
 import cos.peerna.global.security.LoginUser;
 import cos.peerna.global.security.dto.SessionUser;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @RestController
@@ -18,22 +24,27 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<Long> signUp(@RequestBody UserRegisterRequest request) {
-        return ResponseEntity.ok(userService.signUp(request.toServiceDto()));
+    public ResponseEntity<ResponseDto<Long>> signUp(@RequestBody UserRegisterRequest request) {
+        Long userId = userService.signUp(request.toServiceDto());
+        return ResponseEntity.created(URI.create(userId.toString())).body(ResponseDto.of(userId));
     }
 
     @DeleteMapping
-    public ResponseEntity<String> signOut(@LoginUser SessionUser user) {
+    public ResponseEntity<Void> signOut(@LoginUser SessionUser user) {
         userService.delete(user.getId());
 
-        return ResponseEntity.ok()
-                .body("success");
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/info")
-    public ResponseEntity<SessionUser> userStatus(@LoginUser SessionUser user) {
+    @GetMapping("/me")
+    public ResponseEntity<ResponseDto<UserProfile>> me(@LoginUser SessionUser user) {
         return ResponseEntity.ok()
-                .body(user);
+                .body(ResponseDto.of(UserProfile.builder()
+                        .userId(user.getId())
+                        .name(user.getName())
+                        .imageUrl(user.getImageUrl())
+                        .email(user.getEmail())
+                        .build()));
     }
 
     @PostMapping("/follow")
@@ -51,10 +62,10 @@ public class UserController {
     }
 
     @PatchMapping("/github-repo")
-    public ResponseEntity<String> updateGithubRepo(@LoginUser SessionUser user,
-                                                   @RequestBody UpdateGithubRepoRequest request) {
-        userService.updateGithubRepo(user.getId(), request.githubRepo());
+    public ResponseEntity<ResponseDto<UpdateGithubRepoResponse>> updateGithubRepo(@LoginUser SessionUser user,
+                                                                                  @RequestBody UpdateGithubRepoRequest request) {
+        String repositoryName = userService.updateGithubRepo(user.getId(), request.githubRepo());
         return ResponseEntity.ok()
-                .body("success");
+                .body(ResponseDto.of(new UpdateGithubRepoResponse(repositoryName)));
     }
 }

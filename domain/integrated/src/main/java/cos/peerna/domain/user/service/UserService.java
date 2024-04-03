@@ -91,9 +91,10 @@ public class UserService {
         }
     }
 
-    public void updateGithubRepo(Long userId, String githubRepo) {
+    public String updateGithubRepo(Long userId, String githubRepo) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found"));
         user.updateGithubRepo(githubRepo);
+        return user.getGithubRepo();
     }
 }
