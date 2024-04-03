@@ -58,7 +58,7 @@ public class ReplyService {
     private final ConnectRepository connectRepository;
 
     @Transactional
-    public String registerWithGPT(RegisterWithGPTCommand command, SessionUser sessionUser) {
+    public Long registerWithGPT(RegisterWithGPTCommand command, SessionUser sessionUser) {
         User user = userRepository.findById(sessionUser.getId())
                 .orElseThrow(() -> new UsernameNotFoundException("No User Data"));
         Problem problem = problemRepository.findById(command.problemId())
@@ -87,11 +87,11 @@ public class ReplyService {
         TODO: User의 Authority에 따라 ReviewReplyEvent 발행 여부 결정
          */
 
-        return String.valueOf(reply.getId());
+        return reply.getId();
     }
 
     @Transactional
-    public String registerWithPerson(RegisterWithPersonCommand command, SessionUser sessionUser) {
+    public Long registerWithPerson(RegisterWithPersonCommand command, SessionUser sessionUser) {
         User user = userRepository.findById(sessionUser.getId())
                 .orElseThrow(() -> new UsernameNotFoundException("No User Data"));
         Connect connect = connectRepository.findById(user.getId())
@@ -135,7 +135,7 @@ public class ReplyService {
                 .build();
         simpMessagingTemplate.convertAndSend("/room/" + room.getId() + "/answer", replyResult);
 
-        return String.valueOf(reply.getId());
+        return reply.getId();
     }
 
     @Transactional
