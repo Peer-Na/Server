@@ -1,0 +1,52 @@
+// operation::rest-docs-test-controller-test/rest-docs-test[snippets="http-request,http-response"]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+== Users
+
+=== 회원 가입
+
+==== Request
+
+include::{snippets}/user-controller-test/sign-up/http-request.adoc[]
+include::{snippets}/user-controller-test/sign-up/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/user-controller-test/sign-up/http-response.adoc[]
+include::{snippets}/user-controller-test/sign-up/response-fields.adoc[]
+
+=== 회원 탈퇴
+
+==== Request
+
+include::{snippets}/user-controller-test/sign-out/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/user-controller-test/sign-out/http-response.adoc[]
+
+=== 본인 정보 조회
+
+==== Request
+
+include::{snippets}/user-controller-test/me/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/user-controller-test/me/http-response.adoc[]
+include::{snippets}/user-controller-test/me/response-fields.adoc[]
+
+=== 깃허브 레포지토리 업데이트
+
+==== Request
+
+include::{snippets}/user-controller-test/update-github-repo/http-request.adoc[]
+include::{snippets}/user-controller-test/update-github-repo/request-fields.adoc[]
+
+==== Response
+
+include::{snippets}/user-controller-test/update-github-repo/http-response.adoc[]
+include::{snippets}/user-controller-test/update-github-repo/response-fields.adoc[]
