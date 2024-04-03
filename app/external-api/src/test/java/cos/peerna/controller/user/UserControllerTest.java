@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cos.peerna.controller.BaseControllerTest;
 import cos.peerna.controller.dto.ResponseDto;
 import cos.peerna.controller.user.request.UserRegisterRequest;
-import cos.peerna.controller.user.response.UpdateGithubRepoResponse;
+import cos.peerna.controller.user.response.UserRegisterResponse;
 import cos.peerna.domain.user.dto.UserProfile;
 import groovy.util.logging.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -35,10 +35,10 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("회원가입")
     public void signUp() throws Exception {
-        UserRegisterRequest userRegisterRequest = new UserRegisterRequest(2L, "testUser", "testPassword", "testEmail");
+        UserRegisterRequest userRegisterRequest = new UserRegisterRequest(2L, "testUser", "testEmail", "testPassword");
 
         when(userController.signUp(userRegisterRequest)).thenReturn(ResponseEntity.created(null)
-                .body(ResponseDto.of(2L)));
+                .body(ResponseDto.of(new UserRegisterResponse(2L))));
 
         mockMvc.perform(RestDocumentationRequestBuilders.post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -53,7 +53,7 @@ public class UserControllerTest extends BaseControllerTest {
                                 fieldWithPath("email").type(JsonFieldType.STRING).description("회원 이메일")
                         ),
                         responseFields(
-                                fieldWithPath("data").type(NUMBER).description("생성된 회원 ID")
+                                fieldWithPath("data.user_id").type(NUMBER).description("생성된 회원 ID")
                         )
                 ));
     }
@@ -75,9 +75,9 @@ public class UserControllerTest extends BaseControllerTest {
     public void me() throws Exception {
         ResponseDto<UserProfile> responseDto = ResponseDto.of(UserProfile.builder()
                         .userId(1L)
-                        .name("testUser")
-                        .email("testEmail")
-                        .imageUrl("testImageUrl")
+                        .userName("testUser")
+                        .userEmail("testEmail")
+                        .userImage("testImageUrl")
                         .build());
         when(userController.me(any())).thenReturn(ResponseEntity.ok().body(responseDto));
 
@@ -88,9 +88,9 @@ public class UserControllerTest extends BaseControllerTest {
                 .andDo(restDocs.document(
                         responseFields(
                                 fieldWithPath("data.user_id").type(NUMBER).description("회원 ID"),
-                                fieldWithPath("data.name").type(STRING).description("회원 명"),
-                                fieldWithPath("data.email").type(STRING).description("회원 이메일"),
-                                fieldWithPath("data.image_url").type(STRING).description("회원 이미지 URL")
+                                fieldWithPath("data.user_name").type(STRING).description("회원 명"),
+                                fieldWithPath("data.user_email").type(STRING).description("회원 이메일"),
+                                fieldWithPath("data.user_image").type(STRING).description("회원 이미지 URL")
                         )
                 ));
     }
@@ -98,20 +98,16 @@ public class UserControllerTest extends BaseControllerTest {
     @Test
     @DisplayName("깃허브 레포 업데이트")
     public void updateGithubRepo() throws Exception {
-        when(userController.updateGithubRepo(any(), any())).thenReturn(ResponseEntity.ok()
-                .body(ResponseDto.of(new UpdateGithubRepoResponse("testRepoName"))));
+        when(userController.updateGithubRepo(any(), any())).thenReturn(ResponseEntity.noContent().build());
 
         mockMvc.perform(RestDocumentationRequestBuilders.patch("/api/users/github-repo")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content("{\"github_repo\":\"testRepoName\"}"))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(restDocs.document(
                         requestFields(
                                 fieldWithPath("github_repo").type(JsonFieldType.STRING).description("깃허브 레포")
-                        ),
-                        responseFields(
-                                fieldWithPath("data.github_repo").type(JsonFieldType.STRING).description("업데이트된 레포 이름")
                         )
                 ));
     }

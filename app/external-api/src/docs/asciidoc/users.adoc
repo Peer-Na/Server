@@ -49,4 +49,3 @@ include::{snippets}/user-controller-test/update-github-repo/request-fields.adoc[
 ==== Response
 
 include::{snippets}/user-controller-test/update-github-repo/http-response.adoc[]
-include::{snippets}/user-controller-test/update-github-repo/response-fields.adoc[]

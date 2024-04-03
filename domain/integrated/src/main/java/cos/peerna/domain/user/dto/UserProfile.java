@@ -7,8 +7,10 @@ import lombok.Builder;
 public record UserProfile(
         @JsonProperty("user_id")
         Long userId,
-        String name,
-        @JsonProperty("image_url")
-        String imageUrl,
-        String email
+        @JsonProperty("user_name")
+        String userName,
+        @JsonProperty("user_image")
+        String userImage,
+        @JsonProperty("user_email")
+        String userEmail
 ) {}
