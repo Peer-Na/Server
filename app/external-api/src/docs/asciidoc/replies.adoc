@@ -1,0 +1,43 @@
+// operation::rest-docs-test-controller-test/rest-docs-test[snippets="http-request,http-response"]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+== Replies
+=== 최신순 답변 조회
+==== Request
+include::{snippets}/reply-controller-test/find-replies/http-request.adoc[]
+==== Response
+include::{snippets}/reply-controller-test/find-replies/http-response.adoc[]
+include::{snippets}/reply-controller-test/find-replies/response-fields.adoc[]
+
+=== 문제별 답변 조회
+==== Request
+include::{snippets}/reply-controller-test/find-replies-by-problem/http-request.adoc[]
+==== Response
+include::{snippets}/reply-controller-test/find-replies-by-problem/http-response.adoc[]
+include::{snippets}/reply-controller-test/find-replies-by-problem/response-fields.adoc[]
+
+=== 유저별 답변 조회
+==== Request
+include::{snippets}/reply-controller-test/find-replies-by-user/http-request.adoc[]
+==== Response
+include::{snippets}/reply-controller-test/find-replies-by-user/http-response.adoc[]
+include::{snippets}/reply-controller-test/find-replies-by-user/response-fields.adoc[]
+
+=== 답변 등록-GPT와 함께
+==== Request
+include::{snippets}/reply-controller-test/register-reply-with-gpt/http-request.adoc[]
+include::{snippets}/reply-controller-test/register-reply-with-gpt/request-fields.adoc[]
+==== Response
+include::{snippets}/reply-controller-test/register-reply-with-gpt/http-response.adoc[]
+include::{snippets}/reply-controller-test/register-reply-with-gpt/response-fields.adoc[]
+
+=== 답변 등록-사람과 함께
+==== Request
+include::{snippets}/reply-controller-test/register-reply-with-human/http-request.adoc[]
+include::{snippets}/reply-controller-test/register-reply-with-human/request-fields.adoc[]
+==== Response
+include::{snippets}/reply-controller-test/register-reply-with-human/http-response.adoc[]
+include::{snippets}/reply-controller-test/register-reply-with-human/response-fields.adoc[]
