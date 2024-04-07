@@ -2,6 +2,7 @@ package cos.peerna.controller.problem.response;
 
 import cos.peerna.domain.problem.dto.result.AnswerAndKeywordResult;
 import cos.peerna.domain.problem.dto.result.KeywordResult;
+import java.util.List;
 import lombok.Builder;
 import org.springframework.validation.annotation.Validated;
 
@@ -9,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public record AnswerAndKeywordResponse(
 		String answer,
-		KeywordResult keywords
+		List<String> keywords
 ) {
 
 	public static AnswerAndKeywordResponse of(AnswerAndKeywordResult result) {

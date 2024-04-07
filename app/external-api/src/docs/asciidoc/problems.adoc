@@ -1,0 +1,20 @@
+// operation::rest-docs-test-controller-test/rest-docs-test[snippets="http-request,http-response"]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+== Problems
+=== 예시 답변 및 키워드 조회
+==== Request
+include::{snippets}/problem-controller-test/get-answer-and-keyword/http-request.adoc[]
+==== Response
+include::{snippets}/problem-controller-test/get-answer-and-keyword/http-response.adoc[]
+include::{snippets}/problem-controller-test/get-answer-and-keyword/response-fields.adoc[]
+
+=== 카테고리별 문제 조회
+==== Request
+include::{snippets}/problem-controller-test/find-problems-by-category/http-request.adoc[]
+==== Response
+include::{snippets}/problem-controller-test/find-problems-by-category/http-response.adoc[]
+include::{snippets}/problem-controller-test/find-problems-by-category/response-fields.adoc[]
