@@ -1,0 +1,20 @@
+// operation::rest-docs-test-controller-test/rest-docs-test[snippets="http-request,http-response"]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+== Histories
+=== 유저 학습이력 조회
+==== Request
+include::{snippets}/history-controller-test/find-user-history/http-request.adoc[]
+==== Response
+include::{snippets}/history-controller-test/find-user-history/http-response.adoc[]
+include::{snippets}/history-controller-test/find-user-history/response-fields.adoc[]
+
+=== 유저 학습이력 상세 조회
+==== Request
+include::{snippets}/history-controller-test/find-detail-history/http-request.adoc[]
+==== Response
+include::{snippets}/history-controller-test/find-detail-history/http-response.adoc[]
+include::{snippets}/history-controller-test/find-detail-history/response-fields.adoc[]
