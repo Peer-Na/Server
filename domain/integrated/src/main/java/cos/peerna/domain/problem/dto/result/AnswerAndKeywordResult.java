@@ -7,9 +7,9 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public record AnswerAndKeywordResult(
 		String answer,
-		KeywordResult keywords
+		List<String> keywords
 ) {
 	public static AnswerAndKeywordResult of(String answer, List<Keyword> keywords) {
-		return new AnswerAndKeywordResult(answer, KeywordResult.of(keywords));
+		return new AnswerAndKeywordResult(answer, keywords.stream().map(Keyword::getName).toList());
 	}
 }

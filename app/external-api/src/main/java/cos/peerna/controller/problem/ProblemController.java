@@ -1,8 +1,8 @@
 package cos.peerna.controller.problem;
 
+import cos.peerna.controller.dto.ResponseDto;
 import cos.peerna.controller.problem.request.RegisterProblemRequest;
 import cos.peerna.controller.problem.response.AnswerAndKeywordResponse;
-import cos.peerna.controller.problem.response.KeywordResponse;
 import cos.peerna.controller.problem.response.ProblemListResponse;
 import cos.peerna.domain.problem.service.ProblemService;
 import cos.peerna.domain.user.model.Category;
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/problem")
+@RequestMapping("/api/problems")
 public class ProblemController {
 
-    private static final String PROBLEM_PREFIX = "/api/problem/";
+    private static final String PROBLEM_PREFIX = "/api/problems/";
 
     private final ProblemService problemService;
 
@@ -40,23 +40,19 @@ public class ProblemController {
     TODO: /answer, /keyword 2개를 하나로 줄이기
      */
     @GetMapping("/answer")
-    public ResponseEntity<AnswerAndKeywordResponse> getAnswerAndKeyword(@RequestParam Long problemId) {
-        return ResponseEntity.ok(AnswerAndKeywordResponse.of(problemService.getAnswerAndKeywordByProblemId(problemId)));
-    }
-
-    @GetMapping("/keyword")
-    public ResponseEntity<KeywordResponse> findKeywords(
-            @RequestParam Long problemId) {
-        return ResponseEntity.ok(KeywordResponse.of(problemService.findKeywordsByProblemId(problemId)));
+    public ResponseEntity<ResponseDto<AnswerAndKeywordResponse>> getAnswerAndKeyword(@RequestParam Long problemId) {
+        return ResponseEntity.ok(ResponseDto.of(
+                AnswerAndKeywordResponse.of(problemService.getAnswerAndKeywordByProblemId(problemId))));
     }
 
     @GetMapping("/{category}")
-    public ResponseEntity<ProblemListResponse> findProblemsByCategory(
+    public ResponseEntity<ResponseDto<ProblemListResponse>> findProblemsByCategory(
             @PathVariable Category category,
             @RequestParam(required = false, defaultValue = "0") Long cursorId,
-            @RequestParam(required = false, defaultValue = "10") int size) {
-        return ResponseEntity.ok(ProblemListResponse.builder()
+            @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return ResponseEntity.ok(ResponseDto.of(
+                ProblemListResponse.builder()
                 .problems(problemService.findProblemsByCategory(category, cursorId, size))
-                .build());
+                .build()));
     }
 }

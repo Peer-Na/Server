@@ -22,7 +22,7 @@ function loadNewProblems() {
     console.log("Loading New Problems...");
     isFetching = true; // 데이터 로딩 중으로 표시
 
-    axios.get('/api/problem/' + category, {
+    axios.get('/api/problems/' + category, {
         params: {
             cursorId: cursorId
         }
@@ -77,8 +77,6 @@ function submitReply() {
         console.log(error);
         alert('답안 제출에 실패했습니다.');
     });
-
-    loadKeywords();
 }
 
 function enableChatInput() {
@@ -100,25 +98,6 @@ function updateReply() {
     }).catch(function (error) {
         console.log(error);
         alert('답안 수정에 실패했습니다.');
-    });
-}
-
-function loadKeywords() {
-    axios.get('/api/problem/keyword?problemId=' + problemId)
-        .then(function (response) {
-            console.log(response);
-            const keywords = response.data.keywords;
-            const keywordList = document.getElementById('keyword-list');
-            keywordList.innerHTML = '';
-            for (let i = 0; i < keywords.length; i++) {
-                const keywordItem = document.createElement('li');
-                keywordItem.setAttribute('class', 'inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary hover:bg-primary/90 h-10 bg-gradient-to-r from-purple-400 to-purple-600 text-white rounded-2xl px-6 py-2 transition-all duration-200 ease-in-out shadow-md hover:shadow-lg');
-                keywordItem.innerText = keywords[i];
-                keywordList.appendChild(keywordItem);
-            }
-        }).catch(function (error) {
-        console.log(error);
-        alert('키워드를 불러오는데 실패했습니다.');
     });
 }
 
@@ -189,11 +168,20 @@ function openOthersReply() {
 }
 
 function updateExampleAnswer() {
-    axios.get('/api/problem/answer?problemId=' + problemId)
+    axios.get('/api/problems/answer?problemId=' + problemId)
         .then(function (response) {
             console.log(response);
             const exampleAnswerContent = document.getElementById('example-answer-content');
             exampleAnswerContent.innerText = response.data.answer;
+            const keywords = response.data.keywords;
+            const keywordList = document.getElementById('keyword-list');
+            keywordList.innerHTML = '';
+            for (let i = 0; i < keywords.length; i++) {
+                const keywordItem = document.createElement('li');
+                keywordItem.setAttribute('class', 'inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary hover:bg-primary/90 h-10 bg-gradient-to-r from-purple-400 to-purple-600 text-white rounded-2xl px-6 py-2 transition-all duration-200 ease-in-out shadow-md hover:shadow-lg');
+                keywordItem.innerText = keywords[i];
+                keywordList.appendChild(keywordItem);
+            }
         }).catch(function (error) {
         console.log(error);
         alert('예시 답안을 불러오는데 실패했습니다.');

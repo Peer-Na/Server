@@ -72,14 +72,18 @@ public class HistoryService {
                     .build());
         }
 
-        List<Chat> chat = chatRepository.findAllByHistory(history);
+        List<Chat> chattings = chatRepository.findAllByHistory(history);
         return DetailHistoryResult.builder()
                 .question(problem.getQuestion())
                 .exampleAnswer(problem.getAnswer())
                 .time(history.getTime())
                 .replies(replyResultList)
                 .keywords(keywordList.stream().map(Keyword::getName).collect(Collectors.toList()))
-                .chattings(chat.stream().map(ChatMessageSendDto::new).collect(Collectors.toList()))
+                .chattings(chattings.stream().map(chat -> ChatMessageSendDto.builder()
+                        .message(chat.getContent())
+                        .time(chat.getTime())
+                        .writerId(chat.getWriterId())
+                        .build()).collect(Collectors.toList()))
                 .build();
     }
 }
