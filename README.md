@@ -12,9 +12,19 @@
 (이미지 출처: [우아한 기술 블로그](https://techblog.woowahan.com/2637/))
 
 멀티 모듈 프로젝트로 구성하였습니다.
-- independent available: **infra-mariadb**, **infra-redis**
-- system domain : **domain-integrated** (분리 중)
-- application: **app-external-api**, **app-match** (추가예정), **app-chat** (추가예정)
+- independent available:
+  - **infra-mariadb**
+  - **infra-redis**
+- system domain: 
+  - **domain-integrated** (분리 중)
+- in system available:
+  - **support-upload**
+  - **support-github-client** (추가예정)
+  - **support-openai-client** (추가예정)
+- application:
+  - **app-external-api**
+  - **app-match** (추가예정)
+  - **app-chat** (추가예정)
 
 
 ## 📚 Entity Relationship Diagram
