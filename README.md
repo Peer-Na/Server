@@ -6,7 +6,7 @@
 <img src="https://img.shields.io/badge/Docker-FFFFFF?style=flat&logo=Docker&logoColor=2496ED"/>
 <img src="https://img.shields.io/badge/Thymeleaf-FFFFFF?style=flat&logo=Thymeleaf&logoColor=005F0F"/>
 
-## 📌 Server architecture
+## 📌 Project Structure
 <img width="671" alt="Untitled (34)" src="https://github.com/Peer-Na/Server/assets/45088611/c4bda9bc-4141-4756-8cdb-b0028576b965">
 
 (이미지 출처: [우아한 기술 블로그](https://techblog.woowahan.com/2637/))
