@@ -9,6 +9,8 @@
 ## 📌 Server architecture
 <img width="671" alt="Untitled (34)" src="https://github.com/Peer-Na/Server/assets/45088611/c4bda9bc-4141-4756-8cdb-b0028576b965">
 
+(이미지 출처: [우아한 기술 블로그](https://techblog.woowahan.com/2637/))
+
 멀티 모듈 프로젝트로 구성하였습니다.
 - independent available: **infra-mariadb**, **infra-redis**
 - system domain : **domain-integrated** (분리 중)
