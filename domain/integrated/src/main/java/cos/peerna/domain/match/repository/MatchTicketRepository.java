@@ -6,5 +6,6 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 public interface MatchTicketRepository extends CrudRepository<MatchTicket, Long> {
-    List<MatchTicket> findByCategoryOrderByScore(Category category);
+    List<MatchTicket> findByInterest1OrderByScore(Category category);
+    List<MatchTicket> findByInterest2OrderByScore(Category category);
 }

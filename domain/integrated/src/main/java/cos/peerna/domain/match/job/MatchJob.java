@@ -5,6 +5,7 @@ import static org.quartz.JobBuilder.newJob;
 import cos.peerna.domain.match.service.MatchService;
 import cos.peerna.domain.user.model.Category;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.InterruptableJob;
 import org.quartz.JobDataMap;
@@ -16,6 +17,7 @@ import org.quartz.UnableToInterruptJobException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class MatchJob extends QuartzJobBean implements InterruptableJob {
@@ -33,9 +35,16 @@ public class MatchJob extends QuartzJobBean implements InterruptableJob {
 
     @Override
     protected void executeInternal(JobExecutionContext context) {
+        long startTime = System.currentTimeMillis();
+
         for (Category category : Category.values()) {
-            matchService.duoMatching(category);
+            matchService.duoMatchingV3(category);
         }
+
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+
+        log.debug("executeInternal 함수의 수행 시간: " + executionTime + "ms");
     }
 
     public static Trigger buildJobTrigger() {

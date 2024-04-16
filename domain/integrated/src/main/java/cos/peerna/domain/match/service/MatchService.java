@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.math3.distribution.NormalDistribution;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -35,10 +36,34 @@ public class MatchService {
     public void scheduleJob() {
         JobDetail jobDetail = MatchJob.buildJobDetail();
         try {
+            addDummyTickets();
             scheduler.scheduleJob(jobDetail, MatchJob.buildJobTrigger());
         } catch (SchedulerException e) {
             log.error(e.getMessage());
         }
+    }
+
+    private void addDummyTickets() {
+        NormalDistribution scoreNormalDistribution = new NormalDistribution(1000, 500);
+        NormalDistribution timeNormalDistribution = new NormalDistribution(300, 100);
+
+        for (int i = 0; i < 1000; i++) {
+            double score = scoreNormalDistribution.sample();
+            double time = timeNormalDistribution.sample();
+            int interest = (int) (Math.random() * Category.values().length);
+            Category interest1 = Category.values()[interest];
+            Category interest2 = Category.values()[(interest+1) % Category.values().length];
+
+            MatchTicket matchTicket = MatchTicket.builder()
+                    .id((long) i)
+                    .interest1(interest1)
+                    .interest2(interest2)
+                    .score((int) score)
+                    .createdAt(LocalDateTime.now().minusSeconds((long) time))
+                    .build();
+            matchTicketRepository.save(matchTicket);
+        }
+        log.debug("Dummy tickets added");
     }
 
     public MatchTicket findTicketById(Long userId) {
@@ -54,7 +79,8 @@ public class MatchService {
 
         MatchTicket matchTicket = MatchTicket.builder()
                 .id(userId)
-                .category(category)
+                .interest1(category)
+                .interest2(category)
                 .score(user.getScore())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -63,12 +89,11 @@ public class MatchService {
     }
 
     @Async
-    public void duoMatching(Category category) {
-        List<MatchTicket> matchTicketList = findTicketByCategory(category);
+    public void duoMatchingV3(Category category) {
+        List<MatchTicket> matchTicketList = matchTicketRepository.findByInterest1OrderByScore(category);
         if (matchTicketList.size() < 2) {
             return;
         }
-        log.debug("Matching: {}", matchTicketList);
         while (matchTicketList.size() >= 2) {
             MatchTicket matchTicket = matchTicketList.remove(0);
             for (int i = 0; i < matchTicketList.size(); i++) {
@@ -76,19 +101,65 @@ public class MatchService {
                 if (!matchTicket.isMatchable(target))
                     break;
                 if (target.isMatchable(matchTicket)) {
-                    log.debug("Matched: {} and {}", matchTicket, target);
                     matchTicketList.remove(i);
                     matchTicketRepository.delete(matchTicket);
                     matchTicketRepository.delete(target);
-                    kafkaTemplate.send("peerna:matched", CreateRoomEvent.of(List.of(matchTicket.getId(), target.getId()), category));
+//                    kafkaTemplate.send("peerna:matched", CreateRoomEvent.of(List.of(matchTicket.getId(), target.getId()), category));
+                    break;
+                }
+            }
+            matchTicket = matchTicketRepository.findById(matchTicket.getId()).orElse(null);
+            if (matchTicket != null && matchTicket.isLongTermWaiting()) {
+                matchTicket.rotateInterests();
+                matchTicketRepository.save(matchTicket);
+            }
+        }
+    }
+
+    @Async
+    public void duoMatchingV2(Category category) {
+        List<MatchTicket> matchTicketList = matchTicketRepository.findByInterest1OrderByScore(category);
+        if (matchTicketList.size() < 2) {
+            return;
+        }
+        while (matchTicketList.size() >= 2) {
+            MatchTicket matchTicket = matchTicketList.remove(0);
+            for (int i = 0; i < matchTicketList.size(); i++) {
+                MatchTicket target = matchTicketList.get(i);
+                if (!matchTicket.isMatchable(target))
+                    break;
+                if (target.isMatchable(matchTicket)) {
+                    matchTicketList.remove(i);
+                    matchTicketRepository.delete(matchTicket);
+                    matchTicketRepository.delete(target);
+//                    kafkaTemplate.send("peerna:matched", CreateRoomEvent.of(List.of(matchTicket.getId(), target.getId()), category));
                     break;
                 }
             }
         }
     }
 
-    private List<MatchTicket> findTicketByCategory(Category category) {
-        return matchTicketRepository.findByCategoryOrderByScore(category);
+    public void duoMatchingV1(Category category) {
+        List<MatchTicket> matchTicketList = matchTicketRepository.findByInterest1OrderByScore(category);
+        matchTicketList.addAll(matchTicketRepository.findByInterest2OrderByScore(category));
+        if (matchTicketList.size() < 2) {
+            return;
+        }
+        while (matchTicketList.size() >= 2) {
+            MatchTicket matchTicket = matchTicketList.remove(0);
+            for (int i = 0; i < matchTicketList.size(); i++) {
+                MatchTicket target = matchTicketList.get(i);
+                if (!matchTicket.isMatchable(target))
+                    break;
+                if (target.isMatchable(matchTicket)) {
+                    matchTicketList.remove(i);
+                    matchTicketRepository.delete(matchTicket);
+                    matchTicketRepository.delete(target);
+//                    kafkaTemplate.send("peerna:matched", CreateRoomEvent.of(List.of(matchTicket.getId(), target.getId()), category));
+                    break;
+                }
+            }
+        }
     }
 
     public void cancelTicket(Long userId) {
