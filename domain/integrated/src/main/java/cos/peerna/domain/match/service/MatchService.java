@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
@@ -46,7 +45,6 @@ public class MatchService {
         return matchTicketRepository.findById(userId).orElse(null);
     }
 
-    @Transactional(readOnly = true)
     public MatchTicket addTicket(Long userId, Category category) {
         if (matchTicketRepository.existsById(userId)) {
             return null;
