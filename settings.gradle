@@ -9,6 +9,7 @@ include 'domain:integrated'
 
 // 내부 모듈 계층
 include 'support:upload'
+include 'support:github-client'
 
 // 애플리케이션 모듈 계층
 include 'app:external-api'
