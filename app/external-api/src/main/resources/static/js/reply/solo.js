@@ -28,7 +28,8 @@ function loadNewProblems() {
         }
     }).then(function (response) {
         console.log(response);
-        const problems = response.data.problems;
+        const problems = response.data.data.problems;
+        console.log(problems);
         if (problems.length === 0) {
             alert('해당 카테고리에는 더 이상 문제가 존재하지 않습니다.');
             return;
@@ -48,8 +49,8 @@ function loadNewProblems() {
 }
 
 function submitReply() {
-    axios.post('/api/reply/gpt', {
-        problemId: problemId,
+    axios.post('/api/replies/gpt', {
+        problem_id: problemId,
         answer: document.getElementById('answer').value
     }).then(function (response) {
         console.log(response);
@@ -89,7 +90,7 @@ function enableChatInput() {
 }
 
 function updateReply() {
-    axios.patch('/api/reply', {
+    axios.patch('/api/replies', {
         problemId: problemId,
         answer: document.getElementById('answer').value
     }).then(function (response) {
@@ -172,8 +173,8 @@ function updateExampleAnswer() {
         .then(function (response) {
             console.log(response);
             const exampleAnswerContent = document.getElementById('example-answer-content');
-            exampleAnswerContent.innerText = response.data.answer;
-            const keywords = response.data.keywords;
+            exampleAnswerContent.innerText = response.data.data.answer;
+            const keywords = response.data.data.keywords;
             const keywordList = document.getElementById('keyword-list');
             keywordList.innerHTML = '';
             for (let i = 0; i < keywords.length; i++) {

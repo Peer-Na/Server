@@ -6,13 +6,13 @@ document.addEventListener("DOMContentLoaded", function () {
     loadLatestReplies(cursorId);
 });
 function loadLatestReplies(cursorId) {
-    axios.get('/api/reply', {
+    axios.get('/api/replies', {
         params: {
             cursorId: cursorId,
         }
     }).then(function (response) {
         console.log(response);
-        const replies = response.data.replyList;
+        const replies = response.data.data.replies;
 
         const replyList = document.getElementById('reply-list');
         if (replies.length === 0) {
@@ -47,13 +47,13 @@ function buildReplyItem(reply) {
     b.appendChild(spanImage);
 
     const img = document.createElement("img");
-    img.src = reply.userImage;
+    img.src = reply.user_image;
     img.alt = "작성자 이미지";
     spanImage.appendChild(img);
 
     const spanText = document.createElement("span");
     spanText.className = "flex h-full w-full items-center justify-start rounded-full bg-muted ml-2";
-    spanText.textContent = reply.userName;
+    spanText.textContent = reply.user_name;
     b.appendChild(spanText);
 
     const a = document.createElement("div");
@@ -86,13 +86,13 @@ function buildReplyItem(reply) {
     svg.appendChild(path);
 
     const spanLike = document.createElement("span");
-    spanLike.id = "likeCount" + reply.replyId;
+    spanLike.id = "likeCount" + reply.reply_id;
     spanLike.className = "ml-1.5";
-    spanLike.textContent = reply.likeCount;
+    spanLike.textContent = reply.like_count;
     itemsEnd.appendChild(spanLike);
 
     li.addEventListener('click', function() {
-        window.location.href = '/reply/' + reply.historyId;
+        window.location.href = '/reply/' + reply.history_id;
     });
 
     return li;

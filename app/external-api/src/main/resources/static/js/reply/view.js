@@ -25,7 +25,7 @@ function openOthersReply() {
 }
 
 function likeReply(replyId) {
-    axios.post('/api/reply/likey?replyId=' + replyId,
+    axios.post('/api/replies/likey?replyId=' + replyId,
     ).then(function (response) {
         console.log(response);
         const likeCountElement = document.getElementById('like-count-' + replyId);
@@ -40,7 +40,7 @@ function likeReply(replyId) {
 /*
 좋아요 취소 기능 봉인
 function disLikeReply(replyId) {
-    axios.delete('/api/reply/likey?replyId=' + replyId,
+    axios.delete('/api/replies/likey?replyId=' + replyId,
     ).then(function (response) {
         console.log(response);
         const likeCountElement = document.getElementById('like-count-' + replyId);

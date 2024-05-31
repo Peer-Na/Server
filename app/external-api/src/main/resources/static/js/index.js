@@ -81,7 +81,7 @@ function startStudy() {
 }
 
 function getStudyHistory() {
-    axios.get('/api/reply/' + category, {
+    axios.get('/api/replies/' + category, {
         params: {
             cursorId: cursorId
         }

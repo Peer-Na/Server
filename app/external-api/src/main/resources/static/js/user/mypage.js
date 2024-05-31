@@ -12,7 +12,7 @@ function linkGithubRepo() {
     if (repoName === '' || repoName === null)
         return;
     axios.patch('/api/users/github-repo', {
-        githubRepo: repoName
+        github_repo: repoName
     }).then(function (response) {
         console.log(response);
         alert('GitHub Repository Name 이 등록되었습니다.');
@@ -23,14 +23,14 @@ function linkGithubRepo() {
 }
 
 function loadMoreMyReplies() {
-    axios.get('/api/reply/user', {
+    axios.get('/api/replies/user', {
         params: {
             userId: userId,
             cursorId: cursorId
         }
     }).then(function (response) {
         console.log(response);
-        const replies = response.data.replyList;
+        const replies = response.data.data.replies;
         if (replies.length === 0) {
             if (cursorId !== 0) {
                 alert('더 이상 불러올 답변이 존재하지 않습니다.');
@@ -82,7 +82,7 @@ function buildReplyItem(reply) {
     liElement.appendChild(divTwo);
 
     liElement.addEventListener('click', function() {
-        window.location.href = '/reply/' + reply.replyId;
+        window.location.href = '/reply/' + reply.reply_id;
     });
 
     return liElement;
