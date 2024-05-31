@@ -19,8 +19,7 @@
   - **domain-integrated** (분리 중)
 - in system available:
   - **support-upload**
-  - **support-github-client** (추가예정)
-  - **support-openai-client** (추가예정)
+  - **support-github-client**
 - application:
   - **app-external-api**
   - **app-match** (추가예정)
