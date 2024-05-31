@@ -1,6 +1,6 @@
 package cos.peerna.domain.reply.service;
 
-import cos.peerna.domain.github.event.CommitReplyEvent;
+import cos.peerna.event.CommitReplyEvent;
 import cos.peerna.domain.gpt.event.RegisterReplyEvent;
 import cos.peerna.domain.history.model.History;
 import cos.peerna.domain.history.repository.HistoryRepository;
@@ -34,7 +34,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +48,6 @@ public class ReplyService {
 
     private final KafkaTemplate<String, RegisterReplyEvent> registerReplyEventKafkaTemplate;
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final SimpMessagingTemplate simpMessagingTemplate;
     private final ReplyRepository replyRepository;
     private final UserRepository userRepository;
     private final ProblemRepository problemRepository;
@@ -80,7 +78,8 @@ public class ReplyService {
                     .githubLogin(sessionUser.getLogin())
                     .githubToken(sessionUser.getToken())
                     .githubRepo(user.getGithubRepo())
-                    .problem(problem)
+                    .category(problem.getCategory().name())
+                    .question(problem.getQuestion())
                     .answer(command.answer())
                     .build());
         }
@@ -129,7 +128,8 @@ public class ReplyService {
                     .githubLogin(sessionUser.getLogin())
                     .githubToken(sessionUser.getToken())
                     .githubRepo(user.getGithubRepo())
-                    .problem(problem)
+                    .question(problem.getQuestion())
+                    .category(problem.getCategory().name())
                     .answer(command.answer())
                     .build());
         }
@@ -170,7 +170,8 @@ public class ReplyService {
                     .githubLogin(sessionUser.getLogin())
                     .githubToken(sessionUser.getToken())
                     .githubRepo(user.getGithubRepo())
-                    .problem(problem)
+                    .question(problem.getQuestion())
+                    .category(problem.getCategory().name())
                     .answer(command.answer())
                     .build());
         }

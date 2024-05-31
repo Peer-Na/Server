@@ -1,14 +1,11 @@
-package cos.peerna.domain.github.service;
+package cos.peerna.service;
 
-import cos.peerna.domain.github.domain.Github;
-import cos.peerna.domain.github.service.response.CreateBlobResponse;
-import cos.peerna.domain.github.service.response.CreateCommitResponse;
-import cos.peerna.domain.github.service.response.CreateTreeResponse;
-import cos.peerna.domain.github.service.response.GetReferenceResponse;
-import cos.peerna.domain.github.service.response.GitObject;
-import cos.peerna.domain.problem.model.Problem;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import cos.peerna.model.Github;
+import cos.peerna.service.response.CreateBlobResponse;
+import cos.peerna.service.response.CreateCommitResponse;
+import cos.peerna.service.response.CreateTreeResponse;
+import cos.peerna.service.response.GetReferenceResponse;
+import cos.peerna.service.response.GitObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -24,13 +21,13 @@ public class GithubService {
     private final WebClient defaultClient;
 
     @Async
-    public void commitReply(Github github, Problem problem, String answer) {
+    public void commitReply(Github github) {
         WebClient webClient = github.getGithubClient(defaultClient);
 
         getRefAndSha(webClient, github)
-                .flatMap(success -> createBlob(webClient, github, problem, answer))
-                .flatMap(success -> createTree(webClient, github, problem))
-                .flatMap(success -> createCommit(webClient, github, problem))
+                .flatMap(success -> createBlob(webClient, github))
+                .flatMap(success -> createTree(webClient, github))
+                .flatMap(success -> createCommit(webClient, github))
                 .flatMap(success -> updateHead(webClient, github))
                 .subscribe(
                         success -> log.info("Commit was successful"),
@@ -56,15 +53,11 @@ public class GithubService {
         });
     }
 
-    public Mono<String> createBlob(WebClient webClient, Github github, Problem problem, String answer) {
-        String content = Github.makeContentWithEncode(problem, answer);
-        String encodedContent = Base64.getEncoder().encodeToString(content.getBytes(StandardCharsets.UTF_8));
-        String payload = String.format("{\"content\":\"%s\",\"encoding\":\"base64\"}", encodedContent);
-
+    public Mono<String> createBlob(WebClient webClient, Github github) {
         Mono<CreateBlobResponse> mono = webClient.post()
                 .uri(uriBuilder -> uriBuilder.path(Github.CREATE_BLOB_PATH_PARAM)
                         .build(github.getLogin(), github.getRepo()))
-                .body(Mono.just(payload), String.class)
+                .body(Mono.just(github.getPayload()), String.class)
                 .retrieve()
                 .bodyToMono(CreateBlobResponse.class);
         return mono.flatMap(response -> {
@@ -74,12 +67,9 @@ public class GithubService {
         });
     }
 
-    public Mono<String> createTree(WebClient webClient, Github github,
-                                   Problem problem) {
-        String filePath = Github.makeFilePath(problem);
-
+    public Mono<String> createTree(WebClient webClient, Github github) {
         String treeElement = String.format("{\"path\":\"%s\",\"mode\":\"%s\",\"type\":\"%s\",\"sha\":\"%s\"}",
-                filePath, Github.MODE_FILE, Github.TYPE_BLOB, github.getBlobSha());
+                github.getFilePath(), Github.MODE_FILE, Github.TYPE_BLOB, github.getBlobSha());
 
         String payload = "{\"base_tree\":\"" + github.getRefSha() + "\",\"tree\":[" + treeElement + "]}";
         log.debug("Payload: {}", payload);
@@ -98,10 +88,9 @@ public class GithubService {
         });
     }
 
-    public Mono<String> createCommit(WebClient webClient, Github github, Problem problem) {
-        String message = Github.makeCommitMessage(problem);
+    public Mono<String> createCommit(WebClient webClient, Github github) {
         String payload = String.format("{\"message\":\"%s\",\"tree\":\"%s\",\"parents\":[\"%s\"]}",
-                message, github.getTreeSha(), github.getRefSha());
+                github.getCommitMessage(), github.getTreeSha(), github.getRefSha());
 
         Mono<CreateCommitResponse> mono = webClient.post()
                 .uri(uriBuilder -> uriBuilder.path(Github.CREATE_COMMIT_PATH_PARAM)

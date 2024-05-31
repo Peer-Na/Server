@@ -1,6 +1,5 @@
-package cos.peerna.domain.github.event;
+package cos.peerna.event;
 
-import cos.peerna.domain.problem.model.Problem;
 import lombok.Builder;
 
 @Builder
@@ -8,6 +7,7 @@ public record CommitReplyEvent(
         String githubLogin,
         String githubToken,
         String githubRepo,
-        Problem problem,
+        String question,
+        String category,
         String answer
 ) {}
