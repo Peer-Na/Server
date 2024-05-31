@@ -9,9 +9,10 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 public record RegisterWithGPTRequest(
-        @NotBlank @Length(max=1000) String answer,
-        @JsonProperty("problem_id")
-        @NotNull Long problemId
+        @NotNull @NotBlank @Length(max=1000)
+        String answer,
+        @NotNull @JsonProperty("problem_id")
+        Long problemId
 ) {
     public RegisterWithGPTCommand toServiceDto() {
         return RegisterWithGPTCommand.builder()
