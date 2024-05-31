@@ -88,7 +88,7 @@ public class ReplyService {
         TODO: user.getGithubRepo() == null 일 때, 유저에게 GithubRepo를 등록하라는 메시지 전달
          */
 
-        registerReplyEventKafkaTemplate.send("peerna:openai:register-reply", RegisterReplyEvent.builder()
+        registerReplyEventKafkaTemplate.send("peerna-openai-register_reply", RegisterReplyEvent.builder()
                 .historyId(history.getId())
                 .userId(user.getId())
                 .question(problem.getQuestion())
@@ -137,7 +137,7 @@ public class ReplyService {
         TODO: user.getGithubRepo() == null 일 때, 유저에게 GithubRepo를 등록하라는 메시지 전달
          */
 
-        registerReplyEventKafkaTemplate.send("peerna:room:register-reply", RegisterReplyEvent.builder()
+        registerReplyEventKafkaTemplate.send("peerna-room-register_reply", RegisterReplyEvent.builder()
                 .historyId(reply.getHistory().getId())
                 .replyId(reply.getId())
                 .likeCount(reply.getLikeCount())

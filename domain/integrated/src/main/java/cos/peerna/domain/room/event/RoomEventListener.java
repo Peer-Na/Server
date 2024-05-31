@@ -20,7 +20,7 @@ public class RoomEventListener {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @KafkaListener(
-            topics = "peerna:matched",
+            topics = "peerna-matched",
             containerFactory = "createRoomEventKafkaListenerContainerFactory")
     public void createRoomEventListener(CreateRoomEvent event) {
         log.debug("RoomCreateEvent!! ---> {}", event);
@@ -28,7 +28,7 @@ public class RoomEventListener {
     }
 
     @KafkaListener(
-            topics = "peerna:room:register-reply",
+            topics = "peerna-room-register_reply",
             containerFactory = "registerReplyEventKafkaListenerContainerFactory")
     public void registerReplyEventListener(RegisterReplyEvent event) {
         log.debug("RegisterReplyEvent!! ---> {}", event);

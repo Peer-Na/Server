@@ -15,7 +15,7 @@ public class GPTEventListener {
     private final GPTService gptService;
 
     @KafkaListener(
-            topics = "peerna:openai:register-reply",
+            topics = "peerna-openai-register_reply",
             containerFactory = "registerReplyEventKafkaListenerContainerFactory")
     public void registerReplyEventListener(RegisterReplyEvent event) {
         log.debug("RegisterReplyEvent!! ---> {}", event);
