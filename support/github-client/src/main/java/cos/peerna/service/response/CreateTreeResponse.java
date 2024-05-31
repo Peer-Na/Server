@@ -1,4 +1,4 @@
-package cos.peerna.domain.github.service.response;
+package cos.peerna.service.response;
 
 public record CreateTreeResponse(
         String sha
