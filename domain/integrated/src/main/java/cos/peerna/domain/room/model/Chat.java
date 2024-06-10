@@ -1,14 +1,21 @@
 package cos.peerna.domain.room.model;
 
 import cos.peerna.domain.history.model.History;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,7 +25,8 @@ import java.time.LocalTime;
 })
 public class Chat {
 
-	@Id @GeneratedValue
+	@Id
+	@GeneratedValue
 	@Column(name = "chat_id")
 	private Long id;
 

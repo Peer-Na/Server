@@ -10,7 +10,11 @@ include 'domain:integrated'
 // 내부 모듈 계층
 include 'support:upload'
 include 'support:github-client'
+include 'support:room-event-publisher'
+include 'support:reply-event-publisher'
 
 // 애플리케이션 모듈 계층
 include 'app:external-api'
+include 'app:chat-websocket'
+include 'app:match-websocket'
 

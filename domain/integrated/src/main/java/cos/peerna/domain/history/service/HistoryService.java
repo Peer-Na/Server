@@ -1,5 +1,6 @@
 package cos.peerna.domain.history.service;
 
+import cos.peerna.domain.history.dto.result.ChatMessageResult;
 import cos.peerna.domain.history.dto.result.DetailHistoryResult;
 import cos.peerna.domain.history.dto.result.HistoryResult;
 import cos.peerna.domain.history.model.History;
@@ -8,7 +9,6 @@ import cos.peerna.domain.keyword.model.Keyword;
 import cos.peerna.domain.keyword.repository.KeywordRepository;
 import cos.peerna.domain.problem.model.Problem;
 import cos.peerna.domain.reply.dto.result.ReplyResult;
-import cos.peerna.domain.room.dto.ChatMessageSendDto;
 import cos.peerna.domain.reply.model.Reply;
 import cos.peerna.domain.reply.repository.ReplyRepository;
 import cos.peerna.domain.room.model.Chat;
@@ -79,7 +79,7 @@ public class HistoryService {
                 .time(history.getTime())
                 .replies(replyResultList)
                 .keywords(keywordList.stream().map(Keyword::getName).collect(Collectors.toList()))
-                .chattings(chattings.stream().map(chat -> ChatMessageSendDto.builder()
+                .chattings(chattings.stream().map(chat -> ChatMessageResult.builder()
                         .message(chat.getContent())
                         .time(chat.getTime())
                         .writerId(chat.getWriterId())

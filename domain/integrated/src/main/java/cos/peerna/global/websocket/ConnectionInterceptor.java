@@ -1,8 +1,5 @@
 package cos.peerna.global.websocket;
 
-import cos.peerna.domain.gpt.event.GPTWebSocketDisconnectEvent;
-import cos.peerna.domain.match.event.MatchWebSocketDisconnectEvent;
-import cos.peerna.domain.room.event.RoomWebSocketDisconnectEvent;
 import cos.peerna.domain.room.repository.ConnectRepository;
 import cos.peerna.global.security.dto.SessionUser;
 import java.util.Objects;
