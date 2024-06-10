@@ -1,6 +1,5 @@
-package cos.peerna.match;
+package cos.peerna;
 
-import cos.peerna.PeernaDomainRoot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
