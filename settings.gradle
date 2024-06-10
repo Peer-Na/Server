@@ -1,7 +1,7 @@
 rootProject.name = 'peerna'
 // 독립 모듈 계층
 include 'infra:db-redis'
-include 'infra:db-mariadb'
+include 'infra:db-mysql'
 include 'infra:storage-s3'
 
 // 도메인 모듈 계층

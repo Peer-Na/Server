@@ -3,7 +3,7 @@ jar { enabled = true }
 
 dependencies {
     implementation project(':infra:db-redis')
-    implementation project(':infra:db-mariadb')
+    implementation project(':infra:db-mysql')
     implementation project(':support:github-client')
     implementation project(':support:reply-event-publisher')
     implementation project(':support:room-event-publisher')
