@@ -1,7 +1,6 @@
 package cos.peerna.domain.reply.service;
 
 import cos.peerna.event.CommitReplyEvent;
-import cos.peerna.domain.gpt.event.RegisterReplyEvent;
 import cos.peerna.domain.history.model.History;
 import cos.peerna.domain.history.repository.HistoryRepository;
 import cos.peerna.domain.keyword.service.KeywordService;
@@ -23,6 +22,7 @@ import cos.peerna.domain.room.repository.RoomRepository;
 import cos.peerna.domain.user.model.User;
 import cos.peerna.domain.user.repository.UserRepository;
 import cos.peerna.global.security.dto.SessionUser;
+import cos.peerna.support.event.chat.RegisterReplyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,4 +1,5 @@
 ## ⭐ Stack
+
 <img src="https://img.shields.io/badge/SpringBoot-6db33f?style=flat&logo=Spring Boot&logoColor=FFFFFF"/><img src="https://img.shields.io/badge/Java-e6e6fa?style=flat&logo=OpenJDK&logoColor=000000"/>
 <img src="https://img.shields.io/badge/MariaDB-003545?style=flat&logo=MariaDB&logoColor=FFFFFF"/>
 <img src="https://img.shields.io/badge/Redis-DC382D?style=flat&logo=Redis&logoColor=FFFFFF"/>
@@ -7,30 +8,36 @@
 <img src="https://img.shields.io/badge/Thymeleaf-FFFFFF?style=flat&logo=Thymeleaf&logoColor=005F0F"/>
 
 ## 📌 Project Structure
+
 <img width="671" alt="Untitled (34)" src="https://github.com/Peer-Na/Server/assets/45088611/c4bda9bc-4141-4756-8cdb-b0028576b965">
 
 (이미지 출처: [우아한 기술 블로그](https://techblog.woowahan.com/2637/))
 
 멀티 모듈 프로젝트로 구성하였습니다.
-- independent available:
-  - **infra-mariadb**
-  - **infra-redis**
-- system domain: 
-  - **domain-integrated** (분리 중)
-- in system available:
-  - **support-upload**
-  - **support-github-client**
-- application:
-  - **app-external-api**
-  - **app-match** (추가예정)
-  - **app-chat** (추가예정)
 
+- independent available:
+    - **infra-mysql**
+    - **infra-redis**
+- system domain:
+    - **domain-integrated**
+- in system available:
+    - **support:upload**
+    - **support:github-client**
+    - **support:reply-event-publisher**
+    - **support:room-event-publisher**
+- application:
+    - **app:external-api**
+    - **app:match-websocket**
+    - **app:chat-websocket**
 
 ## 📚 Entity Relationship Diagram
+
 ![Untitled (17)](https://github.com/PeerNA/Backend/assets/45088611/d8f5c586-8a30-4278-a058-abe729bc0083)
 
 # 핵심 기능 소개
+
 ## 2. GPT와 학습 (GPT 면접관)
+
 ![2024-03-1010 44 54-ezgif com-video-to-gif-converter (2)](https://github.com/Peer-Na/Server/assets/45088611/83fa44d0-623f-46e9-a896-f993a8bd22e8)
 
 ```
@@ -39,6 +46,7 @@
 ```
 
 ## 3. 사람과 함께 학습 (동료학습)
+
 <img width="1710" alt="Untitled (30)" src="https://github.com/Peer-Na/Server/assets/45088611/4cd84f38-7b2d-4845-b822-6815c0c052d7">
 
 ```
@@ -47,6 +55,7 @@ GPT가 아닌 사람과도 학습할 수 있습니다.
 ```
 
 ## 4. 빈출 키워드
+
 <img width="655" alt="Untitled (31)" src="https://github.com/Peer-Na/Server/assets/45088611/4e51a201-0773-454f-8f3e-ab044d155f9f">
 
 ```
@@ -56,6 +65,7 @@ GPT가 아닌 사람과도 학습할 수 있습니다.
 ```
 
 ## 5. 자동 깃허브 레포지토리 업데이트
+
 <img width="849" alt="Untitled (32)" src="https://github.com/Peer-Na/Server/assets/45088611/c616ff2d-ad42-4568-9f2c-f2c3c4c306b7">
 
 ```
@@ -65,6 +75,7 @@ Github OAuth 와 Rest API for Github Repository 를 사용하였습니다.
 ```
 
 ## 6. 학습 이력 조회
+
 <img width="1710" alt="Untitled (33)" src="https://github.com/Peer-Na/Server/assets/45088611/3461c78a-a0b0-4ab9-acd7-6205b7360574">
 
 ```
@@ -72,10 +83,12 @@ Github OAuth 와 Rest API for Github Repository 를 사용하였습니다.
 ```
 
 ## 7. 유저 및 인증/인가 모듈
+
 - Github OAuth2 회원가입/로그인
 - Session 기반 유저 인증
 
 ## 8. 클라이언트 개발
+
 - Thymeleaf
 - Tailwind CSS
 

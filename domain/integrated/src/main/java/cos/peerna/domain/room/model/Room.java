@@ -1,19 +1,26 @@
 package cos.peerna.domain.room.model;
 
 import cos.peerna.domain.user.model.Category;
-import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.data.redis.core.RedisHash;
-
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
 
 @Data
 @RedisHash("Peerna:Room")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Room {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Integer id;
 
     @Enumerated(EnumType.STRING)
